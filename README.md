@@ -80,7 +80,7 @@ func main() {
 	case "application":
 		fmt.Println("This is an application.")
 	default:
-		fmt.Printf("This is a(n) %s", mimeType.Media)
+		fmt.Printf("This is a(n) %s.", mimeType.Media)
 	}
 
 	// true
