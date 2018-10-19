@@ -3,6 +3,7 @@ package mimemagic
 import (
 	"io"
 	"os"
+	"path/filepath"
 	"syscall"
 )
 
@@ -38,12 +39,12 @@ func MatchFilePath(path string, limit int) (MediaType, error) {
 		return mediaTypes[unknownType], err
 	}
 	defer f.Close()
-	return MatchReader(f, f.Name(), limit)
+	return MatchFile(f, limit)
 }
 
 // MatchFile is an *os.File convenience wrapper for MatchReader.
 func MatchFile(f *os.File, limit int) (MediaType, error) {
-	return MatchReader(f, f.Name(), limit)
+	return MatchReader(f, filepath.Base(f.Name()), limit)
 }
 
 // MatchReader is an io.Reader wrapper for Match that can be

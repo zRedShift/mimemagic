@@ -511,7 +511,7 @@ func unpackFixtures() (dirPath string, err error) {
 	return dirPath, nil
 }
 
-func TestMatch(t *testing.T) {
+func TestMatchFilePath(t *testing.T) {
 	path, err := unpackFixtures()
 	if err != nil {
 		t.Fatalf("couldn't unpack archive: %v", err)
@@ -524,15 +524,13 @@ func TestMatch(t *testing.T) {
 	}()
 	for _, test := range combinedTests {
 		t.Run(test.filename, func(t *testing.T) {
-			data, err := ioutil.ReadFile(filepath.Join(path, test.filename))
+			got, err := MatchFilePath(filepath.Join(path, test.filename), -1)
 			if err != nil {
-				t.Fatalf("couldn't read file %s: %v", test.filename, err)
+				t.Errorf("MatchFilePath() error = %v", err)
+				return
 			}
-			if len(data) > magicMaxLen {
-				data = data[:magicMaxLen]
-			}
-			if got := Match(data, test.filename).MediaType(); got != test.want {
-				t.Errorf("Match() = %v, want %v", got, test.want)
+			if got.MediaType() != test.want {
+				t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), test.want)
 			}
 		})
 	}
@@ -565,6 +563,21 @@ func BenchmarkMatchAll(b *testing.B) {
 	for _, f := range combinedTests {
 		b.Run(f.filename, func(b *testing.B) {
 			benchmarkMatch(filepath.Join(path, f.filename), b)
+		})
+	}
+}
+
+func TestMediaType_IsExtension(t *testing.T) {
+	for _, m := range mediaTypes {
+		t.Run(m.MediaType(), func(t *testing.T) {
+			for _, ext := range m.Extensions {
+				if got := m.IsExtension(ext); got != true {
+					t.Errorf("MediaType.IsExtension() = %v, want %v", got, true)
+				}
+			}
+			if got := m.IsExtension("not.an.extension"); got != false {
+				t.Errorf("MediaType.IsExtension() = %v, want %v", got, false)
+			}
 		})
 	}
 }
