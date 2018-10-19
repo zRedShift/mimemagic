@@ -88,7 +88,7 @@ func main() {
 }
 ```
 The CLI:
-```bash
+```
 Usage: mimemagic [options] <file> ...
 Determines the MIME type of the given file(s).
 
