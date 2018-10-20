@@ -131,4 +131,5 @@ Examples:
 ## Benchmarks
 
 See [Benchmarks](https://github.com/zRedShift/mimemagic/blob/master/benchmarks.txt). For Match(), the average across 
-over 400 completely different files (representing a unique MIME type each) is 14 ± 8 μs/op.
+over 400 completely different files (representing a unique MIME type each) is 13 ± 7 μs/op. For MatchGlob() it's 900
+± 200 ns/op, and for 12 ± 7 μs/op MatchMagic().
