@@ -38,11 +38,7 @@ func MatchFilePath(path string, limit int) (m MediaType, err error) {
 	if err != nil {
 		return mediaTypes[unknownType], err
 	}
-	defer func() {
-		if cErr := f.Close(); cErr != nil && err == nil {
-			err = cErr
-		}
-	}()
+	defer f.Close()
 	return MatchFile(f, limit)
 }
 

@@ -38,7 +38,7 @@ var xmlTests = []struct {
 	{"xml-in-mp3.mp3", "application/octet-stream"},
 }
 
-func TestMatchXMLReader(t *testing.T) {
+func TestMatchXML(t *testing.T) {
 	path, err := unpackFixtures()
 	if err != nil {
 		t.Fatalf("couldn't unpack archive: %v", err)
@@ -49,6 +49,17 @@ func TestMatchXMLReader(t *testing.T) {
 			panic(err)
 		}
 	}()
+	for _, test := range xmlTests {
+		t.Run(test.filename, func(t *testing.T) {
+			data, err := ioutil.ReadFile(filepath.Join(path, test.filename))
+			if err != nil {
+				t.Fatalf("couldn't read file %s: %v", test.filename, err)
+			}
+			if got := MatchXML(data).MediaType(); got != test.want {
+				t.Errorf("MatchXML() = %v, want %v", got, test.want)
+			}
+		})
+	}
 	for _, test := range xmlTests {
 		t.Run(test.filename, func(t *testing.T) {
 			f, err := os.Open(filepath.Join(path, test.filename))

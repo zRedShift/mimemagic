@@ -57,10 +57,7 @@ func matchTreeMagic(path string) (int, error) {
 		if err != nil {
 			return err
 		}
-		path, err = filepath.Rel(dir, path)
-		if err != nil {
-			return err
-		}
+		path, _ = filepath.Rel(dir, path)
 		if path == "." || path == "" {
 			return nil
 		}
