@@ -6,72 +6,74 @@ import (
 	"strings"
 )
 
-type MIMEInfo struct {
+type mimeInfo struct {
 	XMLName  struct{}    `xml:"http://www.freedesktop.org/standards/shared-mime-info mime-info"`
-	MIMEType []*MIMEType `xml:"mime-type"`
+	MIMEType []*mimeType `xml:"mime-type"`
 }
 
-type MIMEType struct {
+type mimeType struct {
 	Type            string           `xml:"type,attr"`
-	Comment         []*Comment       `xml:"comment"`
-	Acronym         *Acronym         `xml:"acronym,omitempty"`
-	ExpandedAcronym *ExpandedAcronym `xml:"expanded-acronym,omitempty"`
-	Icon            *Icon            `xml:"icon,omitempty"`
-	GenericIcon     *GenericIcon     `xml:"generic-icon,omitempty"`
-	Glob            []*Glob          `xml:"glob,omitempty"`
-	Magic           []*Magic         `xml:"magic,omitempty"`
-	TreeMagic       []*TreeMagic     `xml:"treemagic,omitempty"`
-	RootXML         []*RootXML       `xml:"root-XML,omitempty"`
-	Alias           []*Alias         `xml:"alias,omitempty"`
-	SubClassOf      []*SubClassOf    `xml:"sub-class-of,omitempty"`
+	Comment         []*comment       `xml:"comment"`
+	Acronym         *acronym         `xml:"acronym,omitempty"`
+	ExpandedAcronym *expandedAcronym `xml:"expanded-acronym,omitempty"`
+	Icon            *icon            `xml:"icon,omitempty"`
+	GenericIcon     *genericIcon     `xml:"generic-icon,omitempty"`
+	Glob            []*glob          `xml:"glob,omitempty"`
+	Magic           []*magic         `xml:"magic,omitempty"`
+	TreeMagic       []*treeMagic     `xml:"treemagic,omitempty"`
+	RootXML         []*rootXML       `xml:"root-XML,omitempty"`
+	Alias           []*alias         `xml:"alias,omitempty"`
+	SubClassOf      []*subClassOf    `xml:"sub-class-of,omitempty"`
 }
 
-type Comment struct {
+type comment struct {
 	Value string `xml:",chardata"`
 	Lang  string `xml:"http://www.w3.org/XML/1998/namespace lang,attr,omitempty"`
 }
 
-type Acronym struct {
+type acronym struct {
 	Value string `xml:",chardata"`
 	Lang  string `xml:"http://www.w3.org/XML/1998/namespace lang,attr,omitempty"`
 }
-type ExpandedAcronym struct {
+type expandedAcronym struct {
 	Value string `xml:",chardata"`
 	Lang  string `xml:"http://www.w3.org/XML/1998/namespace lang,attr,omitempty"`
 }
 
-type Icon struct {
+type icon struct {
 	Name string `xml:"name,attr"`
 }
-type GenericIcon struct {
+
+type genericIcon struct {
 	Name string `xml:"name,attr"`
 }
-type Glob struct {
+
+type glob struct {
 	Pattern       string `xml:"pattern,attr"`
 	Weight        *int   `xml:"weight,attr,omitempty"`
 	CaseSensitive bool   `xml:"case-sensitive,attr,omitempty"`
 }
 
-type Magic struct {
-	Match    []*Match `xml:"match"`
+type magic struct {
+	Match    []*match `xml:"match"`
 	Priority *int     `xml:"priority,attr,omitempty"`
 }
 
-type Match struct {
-	Match  []*Match `xml:"match,omitempty"`
+type match struct {
+	Match  []*match `xml:"match,omitempty"`
 	Offset string   `xml:"offset,attr"`
 	Type   string   `xml:"type,attr"`
 	Value  string   `xml:"value,attr"`
 	Mask   string   `xml:"mask,attr,omitempty"`
 }
 
-type TreeMagic struct {
-	TreeMatch []*TreeMatch `xml:"treematch"`
+type treeMagic struct {
+	TreeMatch []*treeMatch `xml:"treematch"`
 	Priority  *int         `xml:"priority,attr,omitempty"`
 }
 
-type TreeMatch struct {
-	TreeMatch  []*TreeMatch `xml:"treematch,omitempty"`
+type treeMatch struct {
+	TreeMatch  []*treeMatch `xml:"treematch,omitempty"`
 	Path       string       `xml:"path,attr"`
 	Type       string       `xml:"type,attr,omitempty"`
 	MatchCase  bool         `xml:"match-case,attr,omitempty"`
@@ -80,32 +82,34 @@ type TreeMatch struct {
 	MIMEType   string       `xml:"mimetype,attr,omitempty"`
 }
 
-type RootXML struct {
+type rootXML struct {
 	NamespaceURI string `xml:"namespaceURI,attr"`
 	LocalName    string `xml:"localName,attr"`
 }
 
-type Alias struct {
+type alias struct {
 	Type string `xml:"type,attr"`
 }
-type SubClassOf struct {
+type subClassOf struct {
 	Type string `xml:"type,attr"`
 }
 
-type ParsedMIMEInfo []*ParsedMIMEType
+type parsedMIMEInfo []*parsedMIMEType
 
-type ParsedMIMEType struct {
+type parsedMIMEType struct {
 	Media, Subtype, Comment, Acronym, ExpandedAcronym, Icon, GenericIcon string
 	Alias, SubClassOf, Extension                                         []string
-	Glob                                                                 []*ParsedGlob
-	Magic                                                                []*ParsedMagic
-	TreeMagic                                                            []*ParsedTreeMagic
-	RootXML                                                              []*ParsedRootXML
+	Glob                                                                 []*parsedGlob
+	Magic                                                                []*parsedMagic
+	TreeMagic                                                            []*parsedTreeMagic
+	RootXML                                                              []*parsedRootXML
 	Lexicographic                                                        int
 }
 
-func (p *ParsedMIMEType) String() string {
-	alias, subclass, ext, subint := "nil", "nil", "nil", "nil"
+const nilString = "nil"
+
+func (p *parsedMIMEType) String() string {
+	alias, subclass, ext, subint := nilString, nilString, nilString, nilString
 	if len(p.Alias) > 0 {
 		alias = fmt.Sprintf("%#v", p.Alias)
 		s := make([]int, 0, len(alias))
@@ -157,19 +161,19 @@ func (p *ParsedMIMEType) String() string {
 	return fmt.Sprintf("{%q, %q, %q, %q, %q, %q, %q, %s, %s, %s, %s}", p.Media, p.Subtype, p.Comment, p.Acronym, p.ExpandedAcronym, p.Icon, p.GenericIcon, alias, subclass, ext, subint)
 }
 
-type ParsedGlob struct {
+type parsedGlob struct {
 	Pattern       string
 	Weight        int
 	CaseSensitive bool
 }
 
-type ParsedMagic struct {
+type parsedMagic struct {
 	Priority int
 	MIMEType int
-	Match    []*ParsedMatch
+	Match    []*parsedMatch
 }
 
-func (p *ParsedMagic) MaxLen() int {
+func (p *parsedMagic) MaxLen() int {
 	max := 0
 	for _, pp := range p.Match {
 		if nmax := pp.MaxLen(); nmax > max {
@@ -179,7 +183,7 @@ func (p *ParsedMagic) MaxLen() int {
 	return max
 }
 
-func (p *ParsedMagic) TestNum() int {
+func (p *parsedMagic) TestNum() int {
 	t := 0
 	for _, pp := range p.Match {
 		t += pp.TestNum()
@@ -187,7 +191,7 @@ func (p *ParsedMagic) TestNum() int {
 	return t
 }
 
-func (p *ParsedMagic) MinPatternLen() int {
+func (p *parsedMagic) MinPatternLen() int {
 	min := 0
 	for _, pp := range p.Match {
 		if min == 0 || min > pp.MinPatternLen() {
@@ -197,21 +201,21 @@ func (p *ParsedMagic) MinPatternLen() int {
 	return min
 }
 
-func (p *ParsedMagic) String() string {
+func (p *parsedMagic) String() string {
 	s := make([]string, 0, len(p.Match))
 	for _, pp := range p.Match {
-		s = append(s, fmt.Sprintf("%s", pp))
+		s = append(s, pp.String())
 	}
 	pMatch := fmt.Sprintf("[]*magicMatch{%s}", strings.Join(s, ", "))
 	return fmt.Sprintf("{%d, %s}", p.MIMEType, pMatch)
 }
 
-type MagicSlice []*ParsedMagic
+type magicSliceType []*parsedMagic
 
-func (p MagicSlice) Len() int      { return len(p) }
-func (p MagicSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p magicSliceType) Len() int      { return len(p) }
+func (p magicSliceType) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
-func (p MagicSlice) Less(j, i int) bool {
+func (p magicSliceType) Less(j, i int) bool {
 	switch {
 	case p[i].Priority < p[j].Priority:
 		return true
@@ -226,13 +230,13 @@ func (p MagicSlice) Less(j, i int) bool {
 	}
 }
 
-type ParsedMatch struct {
+type parsedMatch struct {
 	RangeStart, RangeLength int
 	Data, Mask              []byte
-	Match                   []*ParsedMatch
+	Match                   []*parsedMatch
 }
 
-func (p *ParsedMatch) MaxLen() int {
+func (p *parsedMatch) MaxLen() int {
 	max := p.RangeStart + p.RangeLength + len(p.Data)
 	for _, pp := range p.Match {
 		if nmax := pp.MaxLen(); nmax > max {
@@ -242,7 +246,7 @@ func (p *ParsedMatch) MaxLen() int {
 	return max
 }
 
-func (p *ParsedMatch) TestNum() int {
+func (p *parsedMatch) TestNum() int {
 	t := 1
 	for _, pp := range p.Match {
 		t += pp.TestNum()
@@ -250,7 +254,7 @@ func (p *ParsedMatch) TestNum() int {
 	return t
 }
 
-func (p *ParsedMatch) MinPatternLen() int {
+func (p *parsedMatch) MinPatternLen() int {
 	t := len(p.Data)
 	min := 0
 	for _, pp := range p.Match {
@@ -261,37 +265,37 @@ func (p *ParsedMatch) MinPatternLen() int {
 	return t + min
 }
 
-func (p *ParsedMatch) String() string {
-	pMatch := "nil"
+func (p *parsedMatch) String() string {
+	pMatch := nilString
 	if len(p.Match) > 0 {
 		s := make([]string, 0, len(p.Match))
 		for _, pp := range p.Match {
-			s = append(s, fmt.Sprintf("%s", pp))
+			s = append(s, pp.String())
 		}
 		pMatch = fmt.Sprintf("[]*magicMatch{%s}", strings.Join(s, ", "))
 	}
-	pMask := "nil"
+	pMask := nilString
 	if len(p.Mask) > 0 {
 		pMask = fmt.Sprintf("%#v", p.Mask)
 	}
 	return fmt.Sprintf("{%d, %d, %#v, %s, %s}", p.RangeStart, p.RangeLength, p.Data, pMask, pMatch)
 }
 
-type ParsedTreeMagic struct {
+type parsedTreeMagic struct {
 	Priority, MIMEType int
-	TreeMatch          []*ParsedTreeMatch
+	TreeMatch          []*parsedTreeMatch
 }
 
-func (p *ParsedTreeMagic) String() string {
+func (p *parsedTreeMagic) String() string {
 	s := make([]string, 0, len(p.TreeMatch))
 	for _, pp := range p.TreeMatch {
-		s = append(s, fmt.Sprintf("%s", pp))
+		s = append(s, pp.String())
 	}
 	pMatch := fmt.Sprintf("[]treeMatch{%s}", strings.Join(s, ", "))
 	return fmt.Sprintf("{%d, %s}", p.MIMEType, pMatch)
 }
 
-func (p *ParsedTreeMagic) TestNum() int {
+func (p *parsedTreeMagic) TestNum() int {
 	t := 0
 	for _, pp := range p.TreeMatch {
 		t += pp.TestNum()
@@ -299,11 +303,11 @@ func (p *ParsedTreeMagic) TestNum() int {
 	return t
 }
 
-type TreeMagicSlice []*ParsedTreeMagic
+type treeMagicSliceType []*parsedTreeMagic
 
-func (p TreeMagicSlice) Len() int      { return len(p) }
-func (p TreeMagicSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
-func (p TreeMagicSlice) Less(j, i int) bool {
+func (p treeMagicSliceType) Len() int      { return len(p) }
+func (p treeMagicSliceType) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p treeMagicSliceType) Less(j, i int) bool {
 	switch {
 	case p[i].Priority < p[j].Priority:
 		return true
@@ -314,14 +318,14 @@ func (p TreeMagicSlice) Less(j, i int) bool {
 	}
 }
 
-type ParsedTreeMatch struct {
+type parsedTreeMatch struct {
 	Path, MIMEType                  string
 	Type                            int
 	MatchCase, Executable, NonEmpty bool
-	TreeMatch                       []*ParsedTreeMatch
+	TreeMatch                       []*parsedTreeMatch
 }
 
-func (p *ParsedTreeMatch) TestNum() int {
+func (p *parsedTreeMatch) TestNum() int {
 	t := 1
 	for _, pp := range p.TreeMatch {
 		t += pp.TestNum()
@@ -329,12 +333,12 @@ func (p *ParsedTreeMatch) TestNum() int {
 	return t
 }
 
-func (p *ParsedTreeMatch) String() string {
-	pMatch := "nil"
+func (p *parsedTreeMatch) String() string {
+	pMatch := nilString
 	if len(p.TreeMatch) > 0 {
 		s := make([]string, 0, len(p.TreeMatch))
 		for _, pp := range p.TreeMatch {
-			s = append(s, fmt.Sprintf("%s", pp))
+			s = append(s, pp.String())
 		}
 		pMatch = fmt.Sprintf("[]treeMatch{%s}", strings.Join(s, ", "))
 	}
@@ -356,72 +360,72 @@ func (p *ParsedTreeMatch) String() string {
 	return fmt.Sprintf("{%q, %d, %s, %t, %t, %t, %s}", p.Path, mType, pType, p.MatchCase, p.Executable, p.NonEmpty, pMatch)
 }
 
-type ParsedRootXML struct {
+type parsedRootXML struct {
 	NamespaceURI, LocalName string
 	MIMEType                int
 }
 
-func (p *ParsedRootXML) String() string {
+func (p *parsedRootXML) String() string {
 	return fmt.Sprintf("{%q, %q, %d}", p.NamespaceURI, p.LocalName, p.MIMEType)
 }
 
-type RootXMLSLice []*ParsedRootXML
+type rootXMLSliceType []*parsedRootXML
 
-func (p RootXMLSLice) Len() int      { return len(p) }
-func (p RootXMLSLice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p rootXMLSliceType) Len() int      { return len(p) }
+func (p rootXMLSliceType) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
-func (p RootXMLSLice) Less(i, j int) bool {
+func (p rootXMLSliceType) Less(i, j int) bool {
 	return p[i].NamespaceURI < p[j].NamespaceURI
 }
 
-type IdentifierSlice []Identifier
+type identifierSliceType []identifier
 
-func (p IdentifierSlice) Len() int { return len(p) }
+func (p identifierSliceType) Len() int { return len(p) }
 
-func (p IdentifierSlice) Less(j, i int) bool {
+func (p identifierSliceType) Less(j, i int) bool {
 	switch {
-	case p[i].Weight() < p[j].Weight():
+	case p[i].weight() < p[j].weight():
 		return true
-	case p[i].Weight() > p[j].Weight():
+	case p[i].weight() > p[j].weight():
 		return false
-	case p[i].Len() < p[j].Len():
+	case p[i].length() < p[j].length():
 		return true
-	case p[i].Len() > p[j].Len():
+	case p[i].length() > p[j].length():
 		return false
-	case !p[i].Case() && p[j].Case():
+	case !p[i].isUpperCase() && p[j].isUpperCase():
 		return true
-	case p[i].Case() && !p[j].Case():
+	case p[i].isUpperCase() && !p[j].isUpperCase():
 		return false
 	default:
-		return p[i].Type() > p[j].Type()
+		return p[i].mimeType() > p[j].mimeType()
 	}
 }
 
-func (p IdentifierSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p identifierSliceType) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
-func (p IdentifierSlice) GenerateMaps() (maxLen int) {
+func (p identifierSliceType) GenerateMaps() (maxLen int) {
 	for _, id := range p {
-		if l := id.Len(); l > maxLen {
+		if l := id.length(); l > maxLen {
 			maxLen = l
 		}
 		switch id := id.(type) {
-		case SimpleSuffix:
+		case simpleSuffix:
 			if id.CaseSensitive {
-				csSuffixMap[string(id.Suffix)] = append(csSuffixMap[string(id.Suffix)], weightedMIME{id.W, id.MIMEType})
+				csSuffixMap[string(id.suffix)] = append(csSuffixMap[string(id.suffix)], weightedMIME{id.W, id.MIMEType})
 			} else {
-				suffixMap[string(id.Suffix)] = append(suffixMap[string(id.Suffix)], weightedMIME{id.W, id.MIMEType})
+				suffixMap[string(id.suffix)] = append(suffixMap[string(id.suffix)], weightedMIME{id.W, id.MIMEType})
 			}
-		case SimplePrefix:
+		case simplePrefix:
 			if id.CaseSensitive {
-				csPrefixMap[string(id.Prefix)] = append(csPrefixMap[string(id.Prefix)], weightedMIME{id.W, id.MIMEType})
+				csPrefixMap[string(id.prefix)] = append(csPrefixMap[string(id.prefix)], weightedMIME{id.W, id.MIMEType})
 			} else {
-				prefixMap[string(id.Prefix)] = append(prefixMap[string(id.Prefix)], weightedMIME{id.W, id.MIMEType})
+				prefixMap[string(id.prefix)] = append(prefixMap[string(id.prefix)], weightedMIME{id.W, id.MIMEType})
 			}
-		case SimpleText:
+		case simpleText:
 			if id.CaseSensitive {
-				csTextMap[string(id.Text)] = append(csTextMap[string(id.Text)], weightedMIME{id.W, id.MIMEType})
+				csTextMap[string(id.text)] = append(csTextMap[string(id.text)], weightedMIME{id.W, id.MIMEType})
 			} else {
-				textMap[string(id.Text)] = append(textMap[string(id.Text)], weightedMIME{id.W, id.MIMEType})
+				textMap[string(id.text)] = append(textMap[string(id.text)], weightedMIME{id.W, id.MIMEType})
 			}
 		default:
 			patternSlice = append(patternSlice, id)
@@ -444,79 +448,79 @@ func (i weightedMIMESlice) GoString() string {
 	return fmt.Sprintf("%#v", []weightedMIME(i))[len("[]main.weightedMIME"):]
 }
 
-type Prefix string
-type Suffix string
-type Text string
+type prefix string
+type suffix string
+type text string
 
-type SimplePrefix struct {
-	Prefix
+type simplePrefix struct {
+	prefix
 	CaseSensitive bool
 	MIMEType, W   int
 }
-type SimpleSuffix struct {
-	Suffix
+type simpleSuffix struct {
+	suffix
 	CaseSensitive bool
 	MIMEType, W   int
 }
-type SimpleText struct {
-	Text
+type simpleText struct {
+	text
 	CaseSensitive bool
 	MIMEType, W   int
 }
 
-type Any []Matcher
+type anyOf []matcher
 
-type Range struct {
+type byteRange struct {
 	Start, End byte
 }
 
-type List string
+type list string
 
-type Pattern struct {
-	Pattern                       []Matcher
+type pattern struct {
+	Pattern                       []matcher
 	CaseSensitive, Prefix, Suffix bool
 	MIMEType, W                   int
 }
 
-func (p Prefix) String() string {
+func (p prefix) String() string {
 	return fmt.Sprintf("Prefix(%q)", string(p))
 }
 
-func (p Suffix) String() string {
+func (p suffix) String() string {
 	return fmt.Sprintf("Suffix(%q)", string(p))
 }
 
-func (p Text) String() string {
+func (p text) String() string {
 	return fmt.Sprintf("value(%q)", string(p))
 }
 
-func (p List) String() string {
+func (p list) String() string {
 	return fmt.Sprintf("list(%q)", string(p))
 }
 
-func (p Range) String() string {
+func (p byteRange) String() string {
 	return fmt.Sprintf("byteRange{%q, %q}", p.Start, p.End)
 }
 
-func (p SimplePrefix) String() string {
-	return fmt.Sprintf("prefix{%q, %t, %d}", string(p.Prefix), p.CaseSensitive, p.MIMEType)
+func (p simplePrefix) String() string {
+	return fmt.Sprintf("prefix{%q, %t, %d}", string(p.prefix), p.CaseSensitive, p.MIMEType)
 }
 
-func (p SimpleSuffix) String() string {
-	return fmt.Sprintf("suffix{%q, %t, %d}", string(p.Suffix), p.CaseSensitive, p.MIMEType)
+func (p simpleSuffix) String() string {
+	return fmt.Sprintf("suffix{%q, %t, %d}", string(p.suffix), p.CaseSensitive, p.MIMEType)
 }
 
-func (p SimpleText) String() string {
-	return fmt.Sprintf("text{%q, %t, %d}", string(p.Text), p.CaseSensitive, p.MIMEType)
+func (p simpleText) String() string {
+	return fmt.Sprintf("text{%q, %t, %d}", string(p.text), p.CaseSensitive, p.MIMEType)
 
 }
 
-func (p Pattern) String() string {
+func (p pattern) String() string {
 	s := make([]string, len(p.Pattern))
 	n := 0
 	for i := range p.Pattern {
 		s[i] = p.Pattern[i].String()
-		n += p.Pattern[i].Len()
+		n += p.Pattern[i].length()
 	}
 	t := "textPattern"
 	if p.Suffix {
@@ -527,7 +531,7 @@ func (p Pattern) String() string {
 	return fmt.Sprintf("%s{pattern{[]matcher{%s}, %d}, %t, %d, %d}", t, strings.Join(s, ", "), n, p.CaseSensitive, p.MIMEType, p.W)
 }
 
-func (p Any) String() string {
+func (p anyOf) String() string {
 	s := make([]string, len(p))
 	for i := range p {
 		s[i] = p[i].String()
@@ -535,52 +539,52 @@ func (p Any) String() string {
 	return fmt.Sprintf("any{%s}", strings.Join(s, ", "))
 }
 
-type Matcher interface {
-	Len() int
+type matcher interface {
+	length() int
 	String() string
-	ToText() string
+	toText() string
 }
 
-type Identifier interface {
-	Matcher
-	Weight() int
-	Case() bool
-	Type() int
+type identifier interface {
+	matcher
+	weight() int
+	isUpperCase() bool
+	mimeType() int
 }
 
-func (p SimplePrefix) Weight() int { return p.W }
-func (p SimpleText) Weight() int   { return p.W }
-func (p SimpleSuffix) Weight() int { return p.W }
-func (p Pattern) Weight() int      { return p.W }
+func (p simplePrefix) weight() int { return p.W }
+func (p simpleText) weight() int   { return p.W }
+func (p simpleSuffix) weight() int { return p.W }
+func (p pattern) weight() int      { return p.W }
 
-func (p SimplePrefix) Type() int { return p.MIMEType }
-func (p SimpleText) Type() int   { return p.MIMEType }
-func (p SimpleSuffix) Type() int { return p.MIMEType }
-func (p Pattern) Type() int      { return p.MIMEType }
+func (p simplePrefix) mimeType() int { return p.MIMEType }
+func (p simpleText) mimeType() int   { return p.MIMEType }
+func (p simpleSuffix) mimeType() int { return p.MIMEType }
+func (p pattern) mimeType() int      { return p.MIMEType }
 
-func (p SimplePrefix) Case() bool { return p.CaseSensitive }
-func (p SimpleText) Case() bool   { return p.CaseSensitive }
-func (p SimpleSuffix) Case() bool { return p.CaseSensitive }
-func (p Pattern) Case() bool      { return p.CaseSensitive }
+func (p simplePrefix) isUpperCase() bool { return p.CaseSensitive }
+func (p simpleText) isUpperCase() bool   { return p.CaseSensitive }
+func (p simpleSuffix) isUpperCase() bool { return p.CaseSensitive }
+func (p pattern) isUpperCase() bool      { return p.CaseSensitive }
 
-func (p Prefix) Len() int { return len(p) }
-func (p Text) Len() int   { return len(p) }
-func (p Suffix) Len() int { return len(p) }
-func (List) Len() int     { return 1 }
-func (Range) Len() int    { return 1 }
-func (Any) Len() int      { return 1 }
-func (p Pattern) Len() int {
+func (p prefix) length() int  { return len(p) }
+func (p text) length() int    { return len(p) }
+func (p suffix) length() int  { return len(p) }
+func (list) length() int      { return 1 }
+func (byteRange) length() int { return 1 }
+func (anyOf) length() int     { return 1 }
+func (p pattern) length() int {
 	n := 0
 	for _, p := range p.Pattern {
-		n += p.Len()
+		n += p.length()
 	}
 	return n
 }
 
-func (p Prefix) ToText() string { return strings.ToLower(string(p)) }
-func (p Text) ToText() string   { return strings.ToLower(string(p)) }
-func (p Suffix) ToText() string { return strings.ToLower(string(p)) }
-func (p List) ToText() string {
+func (p prefix) toText() string { return strings.ToLower(string(p)) }
+func (p text) toText() string   { return strings.ToLower(string(p)) }
+func (p suffix) toText() string { return strings.ToLower(string(p)) }
+func (p list) toText() string {
 	var r rune = math.MaxInt32
 	for _, c := range string(p) {
 		if c < r {
@@ -589,22 +593,22 @@ func (p List) ToText() string {
 	}
 	return strings.ToLower(fmt.Sprintf("%c", r))
 }
-func (p Range) ToText() string {
+func (p byteRange) toText() string {
 	return strings.ToLower(fmt.Sprintf("%c", p.Start))
 }
-func (p Any) ToText() string {
-	s := p[0].ToText()
+func (p anyOf) toText() string {
+	s := p[0].toText()
 	for _, m := range p {
-		if m.ToText() < s {
-			s = m.ToText()
+		if m.toText() < s {
+			s = m.toText()
 		}
 	}
 	return s
 }
-func (p Pattern) ToText() string {
-	var str strings.Builder
+func (p pattern) toText() string {
+	str := ""
 	for _, m := range p.Pattern {
-		str.WriteString(m.ToText())
+		str += m.toText()
 	}
-	return str.String()
+	return str
 }

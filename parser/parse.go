@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	DefaultPriority = 50
-	InvalidPriority = -1
-	File            = 1
-	Directory       = 2
-	Link            = 3
+	defaultPriority = 50
+	invalidPriority = -1
+	file            = 1
+	directory       = 2
+	link            = 3
 )
 
-func GlobMatcher(g *ParsedGlob, mimeType int) (Identifier, error) {
+func globMatcher(g *parsedGlob, mimeType int) (identifier, error) {
 	s := g.Pattern
 	ast := strings.IndexByte(s, '*')
 	sqO := strings.IndexByte(s, '[')
@@ -27,11 +27,11 @@ func GlobMatcher(g *ParsedGlob, mimeType int) (Identifier, error) {
 	if sqO < 0 && sqC < 0 {
 		switch ast {
 		case -1:
-			return SimpleText{Text(s), g.CaseSensitive, mimeType, g.Weight}, nil
+			return simpleText{text(s), g.CaseSensitive, mimeType, g.Weight}, nil
 		case 0:
-			return SimpleSuffix{Suffix(s[1:]), g.CaseSensitive, mimeType, g.Weight}, nil
+			return simpleSuffix{suffix(s[1:]), g.CaseSensitive, mimeType, g.Weight}, nil
 		case len(s) - 1:
-			return SimplePrefix{Prefix(s[:ast]), g.CaseSensitive, mimeType, g.Weight}, nil
+			return simplePrefix{prefix(s[:ast]), g.CaseSensitive, mimeType, g.Weight}, nil
 		default:
 			return nil, errors.New("invalid glob pattern")
 		}
@@ -98,36 +98,36 @@ func GlobMatcher(g *ParsedGlob, mimeType int) (Identifier, error) {
 	default:
 		return nil, errors.New("invalid glob pattern")
 	}
-	m := Pattern{make([]Matcher, 0, len(parts)), g.CaseSensitive,
+	m := pattern{make([]matcher, 0, len(parts)), g.CaseSensitive,
 		prefix, suffix, mimeType, g.Weight}
 	for i := range parts {
 		if !parts[i].b {
-			m.Pattern = append(m.Pattern, Text(parts[i].s))
+			m.Pattern = append(m.Pattern, text(parts[i].s))
 		} else {
 			s := parts[i].s
 			dash := strings.IndexByte(s, '-')
 			if dash < 0 {
-				m.Pattern = append(m.Pattern, List(s))
+				m.Pattern = append(m.Pattern, list(s))
 				continue
 			}
 			if dash == 1 && len(s) == 3 && s[2] > s[0] {
-				m.Pattern = append(m.Pattern, Range{s[0], s[2]})
+				m.Pattern = append(m.Pattern, byteRange{s[0], s[2]})
 				continue
 			}
-			var any Any
+			var any anyOf
 			for len(s) > 0 {
 				switch {
 				case dash == 0, dash == len(s)-1, dash == 1 && s[0] > s[2]:
 					return nil, errors.New("invalid glob pattern")
 				case dash == 1:
-					any = append(any, Range{s[0], s[2]})
+					any = append(any, byteRange{s[0], s[2]})
 					s = s[3:]
 					dash = strings.IndexByte(s, '-')
 				case dash < 0:
 					dash = len(s) + 1
 					fallthrough
 				default:
-					any = append(any, List(s[:dash-1]))
+					any = append(any, list(s[:dash-1]))
 					s = s[dash-1:]
 					dash = 1
 				}
@@ -138,7 +138,7 @@ func GlobMatcher(g *ParsedGlob, mimeType int) (Identifier, error) {
 	return m, nil
 }
 
-func (p *ParsedMIMEType) Merge(n *ParsedMIMEType) {
+func (p *parsedMIMEType) merge(n *parsedMIMEType) {
 	//if n.Comment != "" {
 	//	//if !strings.EqualFold(p.Comment, n.Comment) {
 	//	//	fmt.Println(p.Comment+",", n.Comment)
@@ -222,12 +222,12 @@ func (p *ParsedMIMEType) Merge(n *ParsedMIMEType) {
 	}
 	if len(n.Glob) > 0 {
 		slc := append(p.Glob, n.Glob...)
-		p.Glob = MergeGlobs(slc...)
+		p.Glob = mergeGlobs(slc...)
 	}
 	if len(n.RootXML) > 0 {
 		slc := append(p.RootXML, n.RootXML...)
-		xmlmap := make(map[string]*ParsedRootXML, len(slc))
-		p.RootXML = make([]*ParsedRootXML, 0, len(slc))
+		xmlmap := make(map[string]*parsedRootXML, len(slc))
+		p.RootXML = make([]*parsedRootXML, 0, len(slc))
 		for _, r := range slc {
 			if rr, ok := xmlmap[r.NamespaceURI]; ok && rr.LocalName == r.LocalName {
 				continue
@@ -244,15 +244,15 @@ func (p *ParsedMIMEType) Merge(n *ParsedMIMEType) {
 	}
 }
 
-func ParseMIMEInfo(m *MIMEInfo) (ParsedMIMEInfo, error) {
+func parseMIMEInfo(m *mimeInfo) (parsedMIMEInfo, error) {
 	if len(m.MIMEType) < 1 {
 		return nil, errors.New("<mime-info> must contain at least one <mime-type> element")
 	}
-	p := make(ParsedMIMEInfo, len(m.MIMEType))
+	p := make(parsedMIMEInfo, len(m.MIMEType))
 	for i, mimeType := range m.MIMEType {
-		mt, err := ParseMIMEType(mimeType)
+		mt, err := parseMIMEType(mimeType)
 		if err != nil {
-			return nil, errors.New(fmt.Sprintf("error parsing %s: %v", mimeType.Type, err))
+			return nil, fmt.Errorf("error parsing %s: %v", mimeType.Type, err)
 		}
 		p[i] = mt
 
@@ -260,28 +260,29 @@ func ParseMIMEInfo(m *MIMEInfo) (ParsedMIMEInfo, error) {
 	return p, nil
 }
 
-func ParseMIMEType(m *MIMEType) (*ParsedMIMEType, error) {
+func parseMIMEType(m *mimeType) (*parsedMIMEType, error) {
 	s := strings.Split(m.Type, "/")
 	if len(s) != 2 {
-		return nil, errors.New(fmt.Sprintf("unknown media type in type '%s'", m.Type))
+		return nil, fmt.Errorf("unknown media type in type '%s'", m.Type)
 	}
 	switch s[0] {
 	case "all", "uri", "print", "text", "application", "image", "audio", "inode", "video",
 		"message", "model", "multipart", "x-content", "x-epoc", "x-scheme-handler", "font":
 		break
 	default:
-		return nil, errors.New(fmt.Sprintf("Unknown media type in type '%s'", m.Type))
+		return nil, fmt.Errorf("Unknown media type in type '%s'", m.Type)
 	}
-	p := &ParsedMIMEType{
+	p := &parsedMIMEType{
 		Media:   s[0],
 		Subtype: s[1],
 	}
+outer:
 	for _, comment := range m.Comment {
 		switch comment.Lang {
 		case "", "en", "en_GB":
 			if comment.Value != "" {
 				p.Comment = comment.Value
-				break
+				break outer
 			}
 		}
 	}
@@ -311,29 +312,29 @@ func ParseMIMEType(m *MIMEType) (*ParsedMIMEType, error) {
 		if len(s) > 2 && s[0] == '*' && s[1] == '.' && strings.IndexByte(s, '[') < 0 {
 			p.Extension = append(p.Extension, s[1:])
 		}
-		pp, err := ParseGlob(glob)
+		pp, err := parseGlob(glob)
 		if err != nil {
 			return nil, err
 		}
 		p.Glob = append(p.Glob, pp)
 	}
-	p.Glob = MergeGlobs(p.Glob...)
+	p.Glob = mergeGlobs(p.Glob...)
 	for _, rootXML := range m.RootXML {
-		rx, err := ParseRootXML(rootXML)
+		rx, err := parseRootXML(rootXML)
 		if err != nil {
 			return nil, err
 		}
 		p.RootXML = append(p.RootXML, rx)
 	}
 	for _, magic := range m.Magic {
-		ma, err := ParseMagic(magic)
+		ma, err := parseMagic(magic)
 		if err != nil {
 			return nil, err
 		}
 		p.Magic = append(p.Magic, ma)
 	}
 	for _, treeMagic := range m.TreeMagic {
-		tm, err := ParseTreeMagic(treeMagic)
+		tm, err := parseTreeMagic(treeMagic)
 		if err != nil {
 			return nil, err
 		}
@@ -342,26 +343,26 @@ func ParseMIMEType(m *MIMEType) (*ParsedMIMEType, error) {
 	return p, nil
 }
 
-func ParseRootXML(r *RootXML) (*ParsedRootXML, error) {
+func parseRootXML(r *rootXML) (*parsedRootXML, error) {
 	if r.NamespaceURI+r.LocalName == "" {
 		return nil, errors.New("namespaceURI and localName attributes can't both be empty")
 	}
 	if strings.ContainsAny(r.NamespaceURI+r.LocalName, " \n") {
 		return nil, errors.New("namespaceURI and localName cannot contain spaces or newlines")
 	}
-	return &ParsedRootXML{
+	return &parsedRootXML{
 		NamespaceURI: r.NamespaceURI,
 		LocalName:    r.LocalName,
 	}, nil
 }
 
-func ParseTreeMagic(t *TreeMagic) (p *ParsedTreeMagic, err error) {
-	p = &ParsedTreeMagic{Priority: GetPriority(t.Priority)}
-	if p.Priority == InvalidPriority {
+func parseTreeMagic(t *treeMagic) (p *parsedTreeMagic, err error) {
+	p = &parsedTreeMagic{Priority: getPriority(t.Priority)}
+	if p.Priority == invalidPriority {
 		return nil, errors.New("invalid tree magic priority")
 	}
 	for _, mm := range t.TreeMatch {
-		pp, err := ParseTreeMatch(mm)
+		pp, err := parseTreeMatch(mm)
 		if err != nil {
 			return nil, err
 		}
@@ -370,11 +371,11 @@ func ParseTreeMagic(t *TreeMagic) (p *ParsedTreeMagic, err error) {
 	return
 }
 
-func ParseTreeMatch(t *TreeMatch) (*ParsedTreeMatch, error) {
+func parseTreeMatch(t *treeMatch) (*parsedTreeMatch, error) {
 	if t.Path == "" {
 		return nil, errors.New("missing 'path' attribute in <treematch>")
 	}
-	p := &ParsedTreeMatch{
+	p := &parsedTreeMatch{
 		Path:       t.Path,
 		MatchCase:  t.MatchCase,
 		Executable: t.Executable,
@@ -384,16 +385,16 @@ func ParseTreeMatch(t *TreeMatch) (*ParsedTreeMatch, error) {
 	case "":
 		break
 	case "file":
-		p.Type = File
+		p.Type = file
 	case "directory":
-		p.Type = Directory
+		p.Type = directory
 	case "link":
-		p.Type = Link
+		p.Type = link
 	default:
 		return nil, errors.New("invalid 'type' attribute in <treematch>")
 	}
 	for _, mm := range t.TreeMatch {
-		pp, err := ParseTreeMatch(mm)
+		pp, err := parseTreeMatch(mm)
 		if err != nil {
 			return nil, err
 		}
@@ -402,23 +403,23 @@ func ParseTreeMatch(t *TreeMatch) (*ParsedTreeMatch, error) {
 	return p, nil
 }
 
-func GetPriority(p *int) int {
+func getPriority(p *int) int {
 	if p == nil {
-		return DefaultPriority
+		return defaultPriority
 	}
 	i := *p
 	if i < 0 || i > 100 {
-		return InvalidPriority
+		return invalidPriority
 	}
 	return i
 }
 
-func ParseGlob(g *Glob) (p *ParsedGlob, err error) {
-	p = &ParsedGlob{
-		Weight:        GetPriority(g.Weight),
+func parseGlob(g *glob) (p *parsedGlob, err error) {
+	p = &parsedGlob{
+		Weight:        getPriority(g.Weight),
 		CaseSensitive: g.CaseSensitive,
 	}
-	if p.Weight == InvalidPriority {
+	if p.Weight == invalidPriority {
 		return nil, errors.New("invalid glob weight")
 	}
 	if g.Pattern == "" {
@@ -432,13 +433,13 @@ func ParseGlob(g *Glob) (p *ParsedGlob, err error) {
 	return
 }
 
-func MergeGlobs(pp ...*ParsedGlob) []*ParsedGlob {
+func mergeGlobs(pp ...*parsedGlob) []*parsedGlob {
 	type gpattern struct {
 		pattern string
 		cs      bool
 	}
-	p := make([]*ParsedGlob, 0, 1)
-	globmap := make(map[gpattern]*ParsedGlob)
+	p := make([]*parsedGlob, 0, 1)
+	globmap := make(map[gpattern]*parsedGlob)
 	for _, ppp := range pp {
 		gp := gpattern{ppp.Pattern, ppp.CaseSensitive}
 		if v, ok := globmap[gp]; ok && v.CaseSensitive == ppp.CaseSensitive && ppp.Weight > v.Weight {
@@ -451,13 +452,13 @@ func MergeGlobs(pp ...*ParsedGlob) []*ParsedGlob {
 	return p
 }
 
-func ParseMagic(m *Magic) (p *ParsedMagic, err error) {
-	p = &ParsedMagic{Priority: GetPriority(m.Priority)}
-	if p.Priority == InvalidPriority {
+func parseMagic(m *magic) (p *parsedMagic, err error) {
+	p = &parsedMagic{Priority: getPriority(m.Priority)}
+	if p.Priority == invalidPriority {
 		return nil, errors.New("invalid magic priority")
 	}
 	for _, mm := range m.Match {
-		pp, err := ParseMatch(mm)
+		pp, err := parseMatch(mm)
 		if err != nil {
 			return nil, err
 		}
@@ -466,7 +467,7 @@ func ParseMagic(m *Magic) (p *ParsedMagic, err error) {
 	return
 }
 
-func ParseMatch(m *Match) (p *ParsedMatch, err error) {
+func parseMatch(m *match) (p *parsedMatch, err error) {
 	if m.Offset == "" {
 		return nil, errors.New("missing 'offset' attribute")
 	}
@@ -475,13 +476,13 @@ func ParseMatch(m *Match) (p *ParsedMatch, err error) {
 		return nil, errors.New("invalid offset")
 	}
 
-	p = new(ParsedMatch)
-	if p.RangeStart, err = ParseOffset(s[0]); err != nil {
+	p = new(parsedMatch)
+	if p.RangeStart, err = parseOffset(s[0]); err != nil {
 		return nil, err
 	}
 
 	if len(s) > 1 {
-		if p.RangeLength, err = ParseOffset(s[1]); err != nil {
+		if p.RangeLength, err = parseOffset(s[1]); err != nil {
 			return nil, err
 		}
 		if p.RangeLength < p.RangeStart {
@@ -506,12 +507,12 @@ func ParseMatch(m *Match) (p *ParsedMatch, err error) {
 	case "little32":
 		byteSize, byteOrder = 4, binary.LittleEndian
 	case "string":
-		p.Data, err = ParseString(m.Value)
+		p.Data, err = parseString(m.Value)
 		if err != nil {
 			return nil, err
 		}
 		if m.Mask != "" {
-			p.Mask, err = ParseStringMask(m.Mask)
+			p.Mask, err = parseStringMask(m.Mask)
 			if err != nil {
 				return nil, err
 			}
@@ -527,16 +528,16 @@ func ParseMatch(m *Match) (p *ParsedMatch, err error) {
 			p.Mask = nil
 		}
 	default:
-		return nil, errors.New(fmt.Sprintf("unknown magic type '%v'", m.Type))
+		return nil, fmt.Errorf("unknown magic type '%v'", m.Type)
 	}
 
 	if byteSize != 0 {
-		p.Data, err = ParseInt(m.Value, byteSize, byteOrder)
+		p.Data, err = parseInt(m.Value, byteSize, byteOrder)
 		if err != nil {
 			return nil, err
 		}
 		if m.Mask != "" {
-			p.Mask, err = ParseInt(m.Mask, byteSize, byteOrder)
+			p.Mask, err = parseInt(m.Mask, byteSize, byteOrder)
 			if err != nil {
 				return nil, err
 			}
@@ -546,7 +547,7 @@ func ParseMatch(m *Match) (p *ParsedMatch, err error) {
 	}
 
 	for _, mm := range m.Match {
-		pp, err := ParseMatch(mm)
+		pp, err := parseMatch(mm)
 		if err != nil {
 			return nil, err
 		}
@@ -555,7 +556,7 @@ func ParseMatch(m *Match) (p *ParsedMatch, err error) {
 	return
 }
 
-func ParseString(s string) ([]byte, error) {
+func parseString(s string) ([]byte, error) {
 	var runeTmp [utf8.UTFMax]byte
 	buf := make([]byte, 0, 3*len(s)/2)
 	for len(s) > 0 {
@@ -563,7 +564,8 @@ func ParseString(s string) ([]byte, error) {
 		if err == strconv.ErrSyntax && len(s) > 1 && s[0] == '\\' {
 			switch s[1] {
 			case '0', '1', '2', '3', '4', '5', '6', '7':
-				a, b, l := rune(s[1]-'0'), rune(0), 2
+				a, l := rune(s[1]-'0'), 2
+				var b rune
 				if len(s) > 2 && '0' <= s[2] && s[2] <= '7' {
 					b = rune(s[2] - '0')
 					l++
@@ -612,7 +614,7 @@ func unhex(b byte) (v rune, ok bool) {
 	return
 }
 
-func ParseStringMask(s string) ([]byte, error) {
+func parseStringMask(s string) ([]byte, error) {
 	if s[0] != '0' || len(s) < 3 || (s[1] != 'x' && s[1] != 'X') {
 		return nil, errors.New("invalid string mask")
 	}
@@ -624,10 +626,10 @@ func ParseStringMask(s string) ([]byte, error) {
 	return hex.DecodeString(s)
 }
 
-func ParseInt(s string, byteSize int, byteOrder binary.ByteOrder) ([]byte, error) {
+func parseInt(s string, byteSize int, byteOrder binary.ByteOrder) ([]byte, error) {
 	n, err := strconv.ParseUint(s, 0, byteSize*8)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("invalid value: %v", err))
+		return nil, fmt.Errorf("invalid value: %v", err)
 	}
 	b := make([]byte, 8)
 	byteOrder.PutUint64(b, n)
@@ -637,12 +639,12 @@ func ParseInt(s string, byteSize int, byteOrder binary.ByteOrder) ([]byte, error
 	return b[:byteSize], nil
 }
 
-func ParseOffset(s string) (n int, err error) {
+func parseOffset(s string) (n int, err error) {
 	if n, err = strconv.Atoi(s); err != nil {
-		return 0, errors.New(fmt.Sprintf("invalid offset: %v", err))
+		return 0, fmt.Errorf("invalid offset: %v", err)
 	}
 	if n < 0 || n > math.MaxInt32 {
-		return 0, errors.New(fmt.Sprintf("offset out of range (%d should fit in 4 bytes)", n))
+		return 0, fmt.Errorf("offset out of range (%d should fit in 4 bytes)", n)
 	}
 	return
 }
