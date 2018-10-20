@@ -10,16 +10,16 @@ namespaces, and tree magic for mounted volumes, generated from the XDG shared-mi
 
 ## Features
 
-- All in native go, no dependencies beside the standard library and golang.org/x/
+- All in native go, no outside dependencies/C library bindings
 - 1003 MIME types, with a description, an acronym (where available), common aliases, extensions, icons, and 
 subclasses
 - 493 magic signature tests (comprising of 1147 individual patterns), featuring range searches and bit masks, as per
 the xdg specification
 - 1099 glob patterns, for filename-based matching
-- 11 Tree Magic signatures and 28 XML namespace/local name signature, offered for completeness' sake.
+- 11 Tree Magic signatures and 28 XML namespace/local name pairs, offered for completeness' sake.
 - Included is the xml file parser to generate your own MIME definitions
-- Also included is a CLI based on this library that is fully featured and blazing-fast, beating the native file
-and KDE's kmimetypefinder in performance
+- Also included is a CLI based on this library that is fully featured and blazing-fast, beating the native 'file'
+and KDE's 'kmimetypefinder' in performance
 - Cross-platform support
 
 ## Installation
@@ -130,4 +130,5 @@ Examples:
 
 ## Benchmarks
 
-See [Benchmarks](https://github.com/zRedShift/mimemagic/blob/master/benchmarks.out).
+See [Benchmarks](https://github.com/zRedShift/mimemagic/blob/master/benchmarks.txt). For Match(), the average across 
+over 400 completely different files (representing a unique MIME type each) is 14 ± 8 μs/op.
