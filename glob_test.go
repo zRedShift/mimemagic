@@ -461,6 +461,26 @@ func TestMatchGlob(t *testing.T) {
 			}
 		})
 	}
+	prefixesCS["test."] = []simpleGlob{{90, 0}}
+	want := "all/all"
+	filename := "test.file"
+	t.Run(filename, func(t *testing.T) {
+		if got := MatchGlob(filename).MediaType(); got != want {
+			t.Errorf("MatchGlob() = %v, want %v", got, want)
+		}
+	})
+	prefixesCS["test."] = nil
+	globs = append(globs, prefixPattern{pattern{
+		matchers: []matcher{list("tvx"), list("wey"), list("spk"), list("wmt"), value(".")},
+		length:   5,
+	}, true, 1, 100})
+	want = "all/allfiles"
+	t.Run(filename, func(t *testing.T) {
+		if got := MatchGlob(filename).MediaType(); got != want {
+			t.Errorf("MatchGlob() = %v, want %v", got, want)
+		}
+	})
+	globs = globs[:len(globs)-1]
 }
 
 func benchmarkMatchGlob(filename string, b *testing.B) {

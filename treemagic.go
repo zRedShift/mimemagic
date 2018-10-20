@@ -42,7 +42,7 @@ func MatchTreeMagic(path string) (MediaType, error) {
 func matchTreeMagic(path string) (int, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
-		return unknownType, nil
+		return unknownType, err
 	}
 	dir := path
 	isDir := info.IsDir()
@@ -123,7 +123,7 @@ func (t treeMatch) match(contents, lowercase map[string]os.FileInfo) bool {
 				m = lowercase
 			}
 			for ff := range m {
-				if rel, err := filepath.Rel(path, ff); err == nil && rel != "." && rel != "" {
+				if rel, err := filepath.Rel(path, ff); err == nil && rel[0] != '.' && rel != "" {
 					goto next
 				}
 			}
@@ -135,9 +135,9 @@ next:
 		return true
 	}
 	for _, tt := range t.next {
-		if tt.match(contents, lowercase) {
-			return true
+		if !tt.match(contents, lowercase) {
+			return false
 		}
 	}
-	return false
+	return true
 }

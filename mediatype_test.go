@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
+	"syscall"
 	"testing"
 )
 
@@ -534,6 +536,74 @@ func TestMatchFilePath(t *testing.T) {
 			}
 		})
 	}
+	t.Run("/non/existent/", func(t *testing.T) {
+		got, err := MatchFilePath("/non/existent/", -1)
+		var wantErr error = &os.PathError{
+			Op:   "open",
+			Path: "/non/existent/",
+			Err:  syscall.ENOENT,
+		}
+		if !reflect.DeepEqual(err, wantErr) {
+			t.Errorf("MatchFilePath() error = %v, want %v", err, wantErr)
+		}
+		want := mediaTypes[unknownType].MediaType()
+		if got.MediaType() != want {
+			t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), want)
+		}
+	})
+	t.Run("/root/access/denied", func(t *testing.T) {
+		got, err := MatchFilePath("/root/access/denied", -1)
+		var wantErr error = &os.PathError{
+			Op:   "open",
+			Path: "/root/access/denied",
+			Err:  syscall.EACCES,
+		}
+		if !reflect.DeepEqual(err, wantErr) {
+			t.Errorf("MatchFilePath() error = %v, want %v", err, wantErr)
+		}
+		want := mediaTypes[unknownType].MediaType()
+		if got.MediaType() != want {
+			t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), want)
+		}
+	})
+}
+
+func TestMatchReader(t *testing.T) {
+	f, _ := os.Open("cmd")
+	defer f.Close()
+	ff, _ := os.Open("/root")
+	defer ff.Close()
+	fff, _ := os.Open("fixtures.tar.gz")
+	fff.Close()
+	ffff, _ := os.Open("fixtures.tar.gz")
+	defer ffff.Close()
+	tests := []struct {
+		name    string
+		reader  io.Reader
+		want    string
+		wantErr error
+	}{
+		{"dir", f, "inode/directory", nil},
+		{"denied", ff, "application/octet-stream", errors.New("invalid argument")},
+		{"already closed", fff, "application/octet-stream", &os.PathError{
+			Op:   "read",
+			Path: "fixtures.tar.gz",
+			Err:  os.ErrClosed,
+		}},
+		{"no filename", ffff, "application/gzip", nil},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := MatchReader(test.reader, "", -1)
+
+			if !reflect.DeepEqual(err, test.wantErr) {
+				t.Errorf("MatchFilePath() error = %v, want %v", err, test.wantErr)
+			}
+			if got.MediaType() != test.want {
+				t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), test.want)
+			}
+		})
+	}
 }
 
 func benchmarkMatch(filename string, b *testing.B) {
@@ -571,11 +641,11 @@ func TestMediaType_IsExtension(t *testing.T) {
 	for _, m := range mediaTypes {
 		t.Run(m.MediaType(), func(t *testing.T) {
 			for _, ext := range m.Extensions {
-				if got := m.IsExtension(ext); got != true {
+				if got := m.IsExtension(ext); !got {
 					t.Errorf("MediaType.IsExtension() = %v, want %v", got, true)
 				}
 			}
-			if got := m.IsExtension("not.an.extension"); got != false {
+			if got := m.IsExtension("not.an.extension"); got {
 				t.Errorf("MediaType.IsExtension() = %v, want %v", got, false)
 			}
 		})

@@ -24,6 +24,8 @@ var treeMagicTests = []struct {
 	{"dir", "inode/directory", false},
 	{"test.random", "application/octet-stream", false},
 	{".", "inode/directory", false},
+	{"/root", "inode/directory", true},
+	{"/non/existent", "application/octet-stream", true},
 }
 
 func TestMatchTreeMagic(t *testing.T) {
@@ -39,7 +41,11 @@ func TestMatchTreeMagic(t *testing.T) {
 	}()
 	for _, test := range treeMagicTests {
 		t.Run(test.path, func(t *testing.T) {
-			got, err := MatchTreeMagic(filepath.Join(path, test.path))
+			fpath := test.path
+			if fpath[0] != '/' {
+				fpath = filepath.Join(path, test.path)
+			}
+			got, err := MatchTreeMagic(fpath)
 			if (err != nil) != test.wantErr {
 				t.Errorf("MatchTreeMagic() error = %v, wantErr %v", err, test.wantErr)
 				return
@@ -49,6 +55,49 @@ func TestMatchTreeMagic(t *testing.T) {
 			}
 		})
 	}
+	preserve := treeMagicSignatures
+	t.Run("special cases", func(t *testing.T) {
+		treeMagicSignatures = []treeMagic{{0, []treeMatch{{
+			"mpegav", -1, fileType,
+			false, false, false, nil,
+		}}}}
+		testfunc := func(fpath, want string) (err error) {
+			fpath = filepath.Join(path, fpath)
+			got, err := MatchTreeMagic(fpath)
+			if err != nil {
+				t.Errorf("MatchTreeMagic() error = %v", err)
+				return
+			}
+			if got.MediaType() != want {
+				t.Errorf("MatchTreeMagic() = %v, want %v", got.MediaType(), want)
+			}
+			return nil
+		}
+		testfunc("video-vcd", "inode/directory")
+		treeMagicSignatures[0].matchers[0].path = "mpegav/AVSEQ01.DAT"
+		treeMagicSignatures[0].matchers[0].executable = true
+		testfunc("video-vcd", "inode/directory")
+		treeMagicSignatures[0].matchers[0].path = "mpegav"
+		treeMagicSignatures[0].matchers[0].mediaType = 0
+		treeMagicSignatures[0].matchers[0].objectType = directoryType
+		treeMagicSignatures[0].matchers[0].executable = false
+		testfunc("video-vcd", "inode/directory")
+		treeMagicSignatures[0].matchers[0].mediaType = -1
+		treeMagicSignatures[0].matchers[0].nonEmpty = true
+		treeMagicSignatures[0].matchers[0].path = "dir"
+		testfunc(".", "inode/directory")
+		treeMagicSignatures[0].matchers[0].path = "core"
+		treeMagicSignatures[0].matchers[0].objectType = fileType
+		testfunc(".", "inode/directory")
+		treeMagicSignatures[0].matchers[0].nonEmpty = false
+		treeMagicSignatures[0].matchers[0].next = make([]treeMatch, 1)
+		treeMagicSignatures[0].matchers[0].next[0] = treeMagicSignatures[0].matchers[0]
+		treeMagicSignatures[0].matchers[0].next[0].next = nil
+		testfunc(".", "all/all")
+		treeMagicSignatures[0].matchers[0].next[0].nonEmpty = true
+		testfunc(".", "inode/directory")
+	})
+	treeMagicSignatures = preserve
 }
 
 func benchmarkMatchTreeMagic(path string, b *testing.B) {

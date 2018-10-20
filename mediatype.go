@@ -33,12 +33,16 @@ func (m MediaType) IsExtension(ext string) bool {
 }
 
 // MatchFilePath is a file path convenience wrapper for MatchReader.
-func MatchFilePath(path string, limit int) (MediaType, error) {
+func MatchFilePath(path string, limit int) (m MediaType, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return mediaTypes[unknownType], err
 	}
-	defer f.Close()
+	defer func() {
+		if cErr := f.Close(); cErr != nil && err == nil {
+			err = cErr
+		}
+	}()
 	return MatchFile(f, limit)
 }
 
@@ -59,10 +63,8 @@ func MatchReader(r io.Reader, filename string, limit int) (MediaType, error) {
 	//io.EOF check for zero-size files
 	if n, err := io.ReadAtLeast(r, data, limit); err == io.ErrUnexpectedEOF || err == io.EOF {
 		data = data[:n]
-	} else if pErr, ok := err.(*os.PathError); ok {
-		if pErr.Err == syscall.EISDIR {
-			return mediaTypes[unknownDirectory], nil
-		}
+	} else if pErr, ok := err.(*os.PathError); ok && pErr.Err == syscall.EISDIR {
+		return mediaTypes[unknownDirectory], nil
 	} else if err != nil {
 		return mediaTypes[unknownType], err
 	}

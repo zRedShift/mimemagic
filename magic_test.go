@@ -467,6 +467,13 @@ func TestMatchMagic(t *testing.T) {
 			}
 		})
 	}
+	t.Run("BOM", func(t *testing.T) {
+		data := []byte{0xff, 0xfe, 0x00}
+		want := "text/plain"
+		if got := MatchMagic(data).MediaType(); got != want {
+			t.Errorf("MatchMagic() = %v, want %v", got, want)
+		}
+	})
 }
 
 func benchmarkMatchMagic(filename string, b *testing.B) {
