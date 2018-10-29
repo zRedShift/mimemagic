@@ -595,7 +595,6 @@ func TestMatchReader(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			got, err := MatchReader(test.reader, "", -1)
-
 			if !reflect.DeepEqual(err, test.wantErr) {
 				t.Errorf("MatchFilePath() error = %v, want %v", err, test.wantErr)
 			}
@@ -604,6 +603,32 @@ func TestMatchReader(t *testing.T) {
 			}
 		})
 	}
+	t.Run("preference", func(t *testing.T) {
+		got, err := MatchReader(ffff, "image.jpeg", 10000, Magic)
+		if err != nil {
+			t.Errorf("MatchReader() error = %v", err)
+			return
+		}
+		want := "application/gzip"
+		if got.MediaType() != want {
+			t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), want)
+		}
+		_, err = ffff.Seek(0, 0)
+		if err != nil {
+			t.Errorf("Seek error = %v", err)
+			return
+		}
+		p, err := ioutil.ReadAll(io.LimitReader(ffff, 512))
+		if err != nil {
+			t.Errorf("ReadAll error = %v", err)
+			return
+		}
+		got = Match(p, "image.jpeg")
+		want = "image/jpeg"
+		if got.MediaType() != want {
+			t.Errorf("Match() = %v, want %v", got.MediaType(), want)
+		}
+	})
 }
 
 func benchmarkMatch(filename string, b *testing.B) {
