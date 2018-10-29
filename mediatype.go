@@ -107,6 +107,9 @@ func match(data []byte, filename string, preference int) int {
 		return matchMagic(data)
 	}
 	if len(data) == 0 {
+		if preference == Magic {
+			return emptyDocument
+		}
 		return globMatches[0]
 	}
 	match := unknownType

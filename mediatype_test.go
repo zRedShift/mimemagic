@@ -633,6 +633,11 @@ func TestMatchReader(t *testing.T) {
 		if got.MediaType() != want {
 			t.Errorf("Match() = %v, want %v", got.MediaType(), want)
 		}
+		got = Match(p[:0], "image.jpeg", Magic)
+		want = mediaTypes[emptyDocument].MediaType()
+		if got.MediaType() != want {
+			t.Errorf("Match() = %v, want %v", got.MediaType(), want)
+		}
 	})
 }
 
