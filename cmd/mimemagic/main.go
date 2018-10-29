@@ -16,6 +16,9 @@ var (
 	humanReadable   bool
 	prependFilename bool
 	standardInput   bool
+	preferMagic     bool
+	preferGlob      bool
+	preference      int
 	mimeType        mimemagic.MediaType
 	input           *os.File
 	err             error
@@ -31,17 +34,23 @@ func init() {
 	flag.BoolVar(&filenameOnly, "f", false,
 		"Determine the MIME type of the file(s) using only the file name. Does\n"+
 			"not check for the file's existence. The -c\n flag takes precedence.")
+	flag.BoolVar(&preferGlob, "g", false,
+		"While using both the content and the file name to determine the MIME\n"+
+			"type of the file, always defer to the file name in case of a contention.")
 	flag.IntVar(&limit, "l", -1,
 		"The number of bytes from the beginning of the file mimemagic will\n"+
 			"examine. Reads the entire file if set to a negative value. By default\n"+
 			"mimemagic will only read the first 512 from stdin, however setting this\n"+
 			"flag to a non-default negative value will override this.")
+	flag.BoolVar(&preferMagic, "m", false,
+		"Same as -g, but for content.")
 	flag.BoolVar(&treeMagic, "t", false,
 		"Determine the MIME type of the directory/mounted volume using tree\n"+
 			"magic. Can't be used in conjunction with with -c, -f or -x.")
 	flag.BoolVar(&xmlNamespace, "x", false,
 		"Determine the MIME type of the xml file(s) using the local names and\n"+
 			"namespaces within. Can't be used in conjunction with -c, -f or -t.")
+
 }
 
 func main() {
@@ -82,6 +91,12 @@ func setup() {
 		fmt.Fprint(os.Stderr, "invalid flag combination\n")
 		flag.Usage()
 		os.Exit(2)
+	}
+	if preferGlob {
+		preference = mimemagic.Glob
+	}
+	if preferMagic {
+		preference = mimemagic.Magic
 	}
 	files = flag.Args()
 	if files[0] == "-" {
@@ -124,7 +139,7 @@ func identify(filename string) {
 	case xmlNamespace:
 		mimeType = mimemagic.MatchXMLReader(input, limit)
 	default:
-		mimeType, err = mimemagic.MatchFile(input, limit)
+		mimeType, err = mimemagic.MatchFile(input, limit, preference)
 	}
 	if !printError(err) {
 		if prependFilename {
