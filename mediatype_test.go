@@ -596,14 +596,19 @@ func TestMatchReader(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			got, err := MatchReader(test.reader, "", -1)
 			if !reflect.DeepEqual(err, test.wantErr) {
-				t.Errorf("MatchFilePath() error = %v, want %v", err, test.wantErr)
+				t.Errorf("MatchReader() error = %v, want %v", err, test.wantErr)
 			}
 			if got.MediaType() != test.want {
-				t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), test.want)
+				t.Errorf("MatchReader() = %v, want %v", got.MediaType(), test.want)
 			}
 		})
 	}
 	t.Run("preference", func(t *testing.T) {
+		_, err := ffff.Seek(0, 0)
+		if err != nil {
+			t.Errorf("Seek error = %v", err)
+			return
+		}
 		got, err := MatchReader(ffff, "image.jpeg", 10000, Magic)
 		if err != nil {
 			t.Errorf("MatchReader() error = %v", err)
@@ -611,7 +616,7 @@ func TestMatchReader(t *testing.T) {
 		}
 		want := "application/gzip"
 		if got.MediaType() != want {
-			t.Errorf("MatchFilePath() = %v, want %v", got.MediaType(), want)
+			t.Errorf("MatchReader() = %v, want %v", got.MediaType(), want)
 		}
 		_, err = ffff.Seek(0, 0)
 		if err != nil {
