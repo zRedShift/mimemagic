@@ -496,4 +496,5 @@ var magicSignatures = []magic{
 	{892, []*magicMatch{{0, 0, []byte{0x23, 0x23}, nil, nil}}},
 	{933, []*magicMatch{{0, 0, []byte{0x25}, nil, nil}}},
 	{892, []*magicMatch{{0, 0, []byte{0x25}, nil, nil}}},
+	{621, []*magicMatch{{0, 0, []byte{0x41, 0x43}, nil, nil}}},
 }
