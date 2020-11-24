@@ -13,6 +13,8 @@ import (
 	"testing"
 )
 
+var fixturesPath = filepath.Join("testdata/fixtures.tar.gz")
+
 var combinedTests = []struct {
 	filename string
 	want     string
@@ -450,7 +452,7 @@ var combinedTests = []struct {
 }
 
 func unpackFixtures() (dirPath string, err error) {
-	f, err := os.Open("fixtures.tar.gz")
+	f, err := os.Open(fixturesPath)
 	if err != nil {
 		return
 	}
@@ -573,9 +575,9 @@ func TestMatchReader(t *testing.T) {
 	defer f.Close()
 	ff, _ := os.Open("/root")
 	defer ff.Close()
-	fff, _ := os.Open("fixtures.tar.gz")
+	fff, _ := os.Open(fixturesPath)
 	fff.Close()
-	ffff, _ := os.Open("fixtures.tar.gz")
+	ffff, _ := os.Open(fixturesPath)
 	defer ffff.Close()
 	tests := []struct {
 		name    string
@@ -587,7 +589,7 @@ func TestMatchReader(t *testing.T) {
 		{"denied", ff, "application/octet-stream", errors.New("invalid argument")},
 		{"already closed", fff, "application/octet-stream", &os.PathError{
 			Op:   "read",
-			Path: "fixtures.tar.gz",
+			Path: fixturesPath,
 			Err:  os.ErrClosed,
 		}},
 		{"no filename", ffff, "application/gzip", nil},
