@@ -1,0 +1,974 @@
+shared-mime-info 1.10 (2018-28-06)
+* Add mime-type for MJPEG raw streams
+* Add MPEG-4 Ringtone mime-type
+* Add mime-type for HEIF images
+* Add application/vnd.sqlite3, application/x-sqlite2 IANA types
+* Add application/pkcs8-encrypted
+* Add audio/usac
+* Add application/vnd.youtube.yt
+* Add mime-types for raw floppy disk images
+* Add aliases for SAP and HFE floppy images mime-types
+* Use new application/vnd.comicbook-rar IANA type
+* Remove magic from STL binary
+* Add *.adts and *.ass globs from IANA to audio/aac
+* Use new IANA type for application/xliff+xml
+* Use new IANA type for model/stl
+* Add text/x-perl alias to application/x-perl
+* Bump priority for our DjVu mime-types
+* Differentiate Neo Geo Pocket Color ROMs from non-Color ones
+* Remove *.bin from application/octet-stream
+* Add an application/xps alias for application/oxps
+* Change Qt Linguist file type to text/vnd.qt.linguist
+* Fix the QML magic
+
+Tools:
+- Don't warn with unknown top level type names
+- Look in obsolete KDE sub-dirs for clean up opportunities
+- Add some debug when parsing XML package files
+
+Spec:
+- ASCII check should be done with 128 leading bytes, not 32 bytes
+
+shared-mime-info 1.9 (2017-18-09)
+* Add x-systemd-unit and x-dbus-service MIME types
+* Fix magic for application/x-java-keystore on little endian
+* Add mime-type for STL 3D models and GCODE
+* Add application/x-executable as a supertype of application/ecmascript
+* Add shebang magic for gjs JavaScript files
+* Add a mimetype for Khronos texture files
+* Add a mime-type for Famicom Disk System images
+* Add "font" top level type, and use IANA registered type for TTF,
+  OTF, WOFF, TTC and WOFF2
+* Add OpenCL mime-type
+* Add text/x-python3 content type
+* Add Audible.com mime type
+* Add application/x-atari-lynx-rom
+* Add application/x-wonderswan-rom
+* Add application/x-virtual-boy-rom
+* Better JPEG 2000 MIME type support
+* Add support for GIMP data files (.gbr, .gih, .pat)
+* Add an alias for Adobe Illustrator formats
+* Add *.mjs glob for Javascript
+* Rename application/x-trig to application/trig
+* Rename Panasonic RAW image mime-types to image/x-panasonic-rw*
+* Change the preferred suffix for image/x-tga from icb to tga
+* Correct "PostScript" capitalisation
+* Add mimetype for AppImage Type 2
+* Remove AppImage glob with different casing
+
+shared-mime-info 1.8 (2016-12-05)
+* Add Flatpak-related mime-types
+* Add mime-type for a number of Thomson-related disk (and cassette) images
+* Add many audio and video mime-type aliases as used in VLC
+* Add mime-type for pdf.lz files
+* Write the correct length for literal and glob lists to the cache
+* Build fixes
+
+shared-mime-info 1.7 (2016-09-05)
+* Add mime-types for a number of video games systems ROMS
+  (Atari 7800, Atari 2600, Neo Geo Pocket, Sega CD/Mega-CD, Game Boy Color,
+   Genesis 32X, Sega SG-1000, Sega Game Gear, Sega Pico)
+* Add mime-type for .tar.lz and tar.lz4 archives
+* Add mime-type for Jupyter Notebook files
+* Add Flatpak mime-types and add compatibility for xdg-app ones
+* Add *.dib glob to BMP images
+* Use official IANA mime-types for WMF and EMF images
+* Add application/raml+yaml mime-type
+* Add GPX mimetypes as found in the wild
+* Add application/vnd.squashfs and application/vnd.snap mime-types
+* Add mime-type for IGES documents
+* Add mime-types for Sass CSS pre-processor files
+* Add mime-type for Twig templates
+* Add alias application/nappdf for application/pdf
+* Add mimetype for AppImage
+* Add application/x-bsdiff mime-type
+* Add Gherkin feature specifications mime-type
+* Use official IANA registered type for application/vnd.chess-pgn
+* Use new IANA registered type for application/geo+json
+* Use official IANA registered type for application/vnd.comicbook+zip
+* Use official IANA registered type for application/vnd.rar
+* Use official IANA registered type for application/vnd.framemaker
+* Improve VRML mime-type
+* Better MPEG-2 TS magic
+* Better magic for 669 tracker MOD files
+* Fix misdetection of zip files as their content
+* Fix multi-page DjVu detection by file
+* Fix TGA magic detection
+* Fixes related to AMR audio files
+* Remove "*.sg" glob for Sega Master System ROM types
+
+shared-mime-info 1.6 (2016-02-23)
+* Add XAR archive mime-type
+* Add GeoJSON mime-type
+* Add GPX mime-type
+* Add xdg-app mime-type
+* Add *.xht glob and magic for XHTML files
+* Bump priority of archive mime-types with long magics,
+  to avoid false positives when detecting files inside
+  the archive itself
+
+shared-mime-info 1.5 (2015-09-15)
+* Fix compilation with glib < 2.26
+* Update DTD
+
+Mime-type changes:
+* Add more globs to console ROM files
+* Use "folder" generic-icon for inode/directory
+* Bump priority for ISO images glob matching to work
+  around confusion around Wii image files
+* Add application/owl+xml
+* Add text/turtle
+* Use IANA registered image/vnd.zbrush.pcx for PCX
+* Add text/rust for Rust source code
+* Add application/ld+json as subclass of application/json
+* Add text/csv-schema
+* Add application/vnd.coffeescript
+* Make application/vnd.apple.mpegurl a subclass of text/plain
+* Make application/sdp a subclass of text/plain
+* Add application/jrd+json as subclass of application/json
+* Add MTM, MED, 699 and Ultratracker magic for application/x-mod
+* Add Meson build definitions
+* Match newer versions of XCF files
+* Use IANA registered type for PKCS#12
+* Add application/x-doom-wad
+* Add Amiga disk image
+* Rename "Dreamcast ROM" to "Dreamcast GD-ROM"
+* Add application/x-wii-wad
+* Add magic and tests to application/x-gameboy-rom
+* Add application/x-saturn-rom
+* Fix application/x-genesis-rom translation rules
+* Split up multi-page DjVu into its own mime-type
+
+shared-mime-info 1.4 (2015-02-05)
+* Add glob for low-resolution videos from GoPro
+* Add mime-type for partially downloaded files
+* Use IANA registered mime-type for Debian packages
+* Add another magic for OTF fonts
+* Add support for Adobe PageMaker
+* Remove the Apple iOS PNG variant
+* Add *.dbk glob for DocBook
+* Use IANA registered mime-type for Vivo
+* Remove obsolete application/x-gmc-link mime-type
+* Make application/x-wais-source a subclass of text/plain
+* Flip application/smil+xml and application/smil type/alias
+* Add Nintendo 64 ROM magic
+* Add qpress archive support
+* Add image/x-tiff-multipage mime-type
+* Rename "Microsoft icon" to "Windows icon"
+* Add magic for ODB files
+* Use IANA registered text/markdown for Markdown
+* New mimetype for SCons scripts as subclass of x-python
+* Make application/pgp-encrypted a subclass of text/plain
+* Associate *.qmltypes and *.qmlproject files with the text/x-qml mime type
+* Add text/x-genie mime type for Genie source code
+
+* Disable fdatasync() usage if PKGSYSTEM_ENABLE_FSYNC is set
+* Skip mime database update if packages are older than cache
+* Add "-n" option to update-mime-database to only update if "newer"
+
+shared-mime-info 1.3 (2014-04-08)
+* Mime-type changes:
+- Add Aliases for OpenOffice Base and StarWriter
+- Add Apple Keynote 5 mime-type
+- Add mimetype for compressed FictionBook2
+- Don't recognize all .asc files as application/pgp-encrypted
+- Add tree magic for the Kindle e-book reader
+- Add LZ4 archive type
+- Add PC Engine, GameCube and Wii "ROM" types
+- Add audio/x-opus+ogg mime-type
+- Add image/webp mime-type
+- Prefer application/vnd.ms-asf to video/x-ms-asf
+- Add application/x-riff mime-type
+- Add JSON mime-type
+- Add *.jsm glob for Javascript
+- Add magic and glob patterns for compressed x-spss-sav files
+- JavaScript and CSS are not subclasses of text/x-csrc
+- Remove *.CSSL glob for CSS files
+
+* Call g_type_init() only with older glib
+* Fix failures on NetBSD
+* Store MEDIA/SUBTYPE.xml files in lowercase
+
+shared-mime-info 1.2 (2013-09-30)
+* Mime-type changes:
+- Use IANA registered application/sql type for SQL
+- Add test for text/x-python
+- Added *.pyx as Pyrex/Cython variant of text/x-python
+- Lower the priority of the *png glob on Apple PNGs
+- Add magic for Kobo e-book reader
+- Add another magic for EPub books
+- Add missing globs and tests for OpenPGP files
+- Add MIME types for raw disk images
+- Add video/x-matroska-3d mime-type
+- Use application/vnd.adobe.flash.movie for SWF
+- Use application/vnd.nintendo.snes.rom for SNES ROMs, associate *.sfc with them
+- Fix shebang matches for shell scripts
+- Remove *.ogv as a glob for Theora videos as they might not be Theora
+- Improve detection of Perl scripts
+- Add more aliases for Photoshop images
+- Add Microsoft Publisher mime-type
+- Correct JPEG2000 definition
+
+* Check for errors when saving files, and ensure that files
+  are saved to disk before carrying on.
+* Don't use access() to check for writability
+* Rename configure.in to configure.ac
+
+shared-mime-info 1.1 (2012-02-13)
+* Mime-type changes:
+- Add application/x-ccmx
+- Add zz-application/zz-winassoc-* aliases
+- Make application/x-xz-compressed-tar a subclass of application/x-xz
+- Add DTS and DTS-HD mime-types
+- Add test for PPM bug
+- Fix comment and add glob for application/pkcs7-mime
+- Add application/x-qtiplot mime-type
+- Add AMZ (AmazonMP3 Download File) mime-type
+- Add separate mime-type for Apple broken PNGs
+- Add *.mk and *.mak text/x-makefile globs
+- Match application/vnd.palm to IANA standard
+- Use IANA registered application/gzip instead of x-gzip
+- Add application/gml+xml
+- Fix Scream Tracker instrument magic
+- Add application/x-gtk-builder type
+- Add magic for v1 and v2 XCF files
+- Add LZMA test file
+- Fix some globs for OGG files
+- Move *.taz from application/x-compressed-tar to application/x-tarz
+- Add some sub-class-of tags for compressed files
+- Add *.tb2 as a glob for application/x-bzip-compressed-tar
+- Add support for DOS EPS files
+- Add *.ar archives to the test suite
+- Add xlr mime-type
+- Add application/vnd.lotus-wordpro
+- Put bz2 patterns before bz ones for bzip-related mimetypes
+- Add simple magic for text/x-gettext-translation-template
+- Add test case for application/x-gettext-translation
+- Add mime-type for source RPMs
+- Add AMR audio test
+- Add test case for TTF fonts
+- Add Woff font mime-type
+- Add FLTK acronym
+- Add application/ics as an alias for text/calendar
+- Add RAR acronym
+- Add dicomdir glob
+- Add *.di as a glob for D source files
+- Add magic for MNG animations
+- Add magic for PICT v2 images
+- Add JNLP file to the test suite
+- Add support for the AVF AVI container variant
+- Add EMF and WMF aliases
+- Improve magic of uncompressed TGA files
+- Add application/winhlp
+- Add text/x-uuencode
+- Add MHTML mime-type
+- Make the main docbook mime-type be application/x-docbook+xml
+- Add application/x-lzh-compressed as alias to application/x-lha
+- Add IFF super-type
+- Split off the AAC mime-type from the M4A one
+- Add text/x-modelica mime-type
+- Add magic for GNU gettext message catalogs (.mo)
+
+* Specification changes:
+- Fix mimetype names used as examples
+- Document that the first extension is the main one
+- Fix missing plural
+
+* Honor NOCONFIGURE=1
+* Allow builders to not run make check by default
+* Fix build for platforms with executable extensions
+* Disable checks when cross compiling
+* Use non-installed update-mime-database in install-data-hook
+* Use native update-mime-database for install when cross compiling
+* Add a local-test target to print mime info
+
+shared-mime-info 1.0 (2012-01-17)
+* Mime-type changes:
+- Add root-XML for AbiWord, Atom, Dia, Dia shape,
+  KML, RDF, XSL FO, metalink, XMI, SMIL
+- Add glob for VDR recordings
+- Make PBM/PPM detection more permissive
+- Fix magic for MP3 files without ID3
+- Add application/vnd.visio mimetype
+- Fix Amazon MP3 being detected as Qt Designer
+- Add application/acrobat alias for PDF files
+- Add support for detecting DVDs without VIDEO_TS dirs
+
+* Test suite adjustments for xdgmime bug fixes
+
+
+shared-mime-info 0.91 (2011-09-18)
+* Mime-type Changes:
+- Add WWF
+- Add application/vnd.android.package-archive.
+- Add root-XML for SVG
+- Add Qt QML
+- Add application/x-fictionbook
+- Add application/x-mobipocket-ebook
+- Add another alias for ASX playlists
+- Add video/3gp, video/x-mpeg, video/x-mpeg2,
+  video/divx, and video/msvideo aliases
+- Add MSOffice 12 and OOXML mime-types
+- Add video/vnd.mpegurl
+- Java class tweaks
+- Add magic for Megadrive ROMs
+- Add application/vnd.tcpdump.pcap
+- Fix root-XML for XSL
+- Add extension for Scheme text files
+- Add extensions for VRML documents
+- Loosen magic for FLTK fluid files
+- Move application/x-reject to text/x-reject
+- Add application/x-nzb
+- Remove glob from text/x-uri
+- Added a *.wsgi pattern for python scripts
+- Add DVI, PKCS, RELAX NG, and S/MIME acronyms.
+- Use text/vcard instead of deprecated text/directory for vCards.
+- Add text/x-markdown
+- Add WebVTT
+- Add *.php5 and *.phps as patterns for PHP
+- Make dash scripts shell scripts
+- Add application/x-iso9660-image alias for application/x-cd-image
+- Add text/x-scala mime type
+- Add another magic for XSPF files
+- Update CHM mime-type to application/vnd.ms-htmlhelp
+
+* Other:
+- Fix parallel build
+- Update GPLv2 COPYING file
+- Use XZ tarballs by default
+
+shared-mime-info 0.90 (2010-12-1)
+* Mime-type Changes:
+- Make application/epub+zip sub-class-of application/zip
+- Make sure RAM files are not all treated as text
+- Make CMakefiles a sub-class of text/plain
+- Add new mime-type for Panasonic RW2 images
+- Add XSL magic
+- Add root-XML for XSL
+- Add *.gem as a glob for tar archives
+- Add test case for text/directory files
+- Add go source code
+- Add pdf.xz mime-type
+- Add text/x-ooc source code
+- Add Cobol source code
+
+* Other:
+- Don't error out on the x-scheme-handler/* mime-types
+- Fix crasher when mime-magic is empty
+
+shared-mime-info 0.80 (2010-09-30)
+* Mime-type Changes:
+- Add magic for F4V (Flash) video files
+- Add mime-type for Dia shapes
+- Bump priority for KOffice magics to give them precedence over gzip and zip
+- Add mime-type for Verilog and SystemVerilog source files and headers
+- Add Qt Linguist translation file
+- Add application/x-xspf+xml alias for XSPF playlists
+- Use audio/flac for FLAC files, make audio/x-flac an alias of it
+- Add mime-type for HDF files
+- Add mime-type for Mozilla Extension packages
+- Add mime-type for text/cache-manifest
+- Add YAML mime-type
+- Add application/relax-ng-compact-syntax mime-type
+- Add more tests for Matlab and Octave files
+- Improve translator comments for VCD, SVCD and PictureCD
+- Add application/pkcs8 mime-type
+- Add audio and video WebM mime-types
+- Add video/mp2t mime-type
+- Use generic video icon for application/x-matroska
+- Improve magic for Matroska files
+- Add magic for audio/x-stm
+- Update magic for Apple HTTP Streaming playlists
+- Add Lrzip archive mime-type
+- Fix PDF detection for some pesky files
+- Add details about 3GPP and 3GPP2 files
+- Add JavaFX video format
+- Add Windows Imaging Format Disk Image mime-type
+- Add application/x-apple-diskimage mime-type
+- Add e-book reader content-type
+- Add application/x-tex as an alias for text/x-tex
+- Use application/oxps mime-type for XPS files
+- Add magic to BibTeX files
+
+* Other:
+- Fix malformed D source test
+- Avoid using ~/.local data when running the test suite
+- Make sure that update-mime-info doesn't get called before installed
+
+shared-mime-info 0.71 (2010-02-01)
+* Mime-type Changes:
+- Add magic for FLAC files
+- Add ICC profiles
+- Remove duplicate XUL definition
+- Add IT8.7/2 profiles
+- Add Apple's HTTP Live Streaming playlists
+- Add application/pkix-crl
+- Match *xsl and *xslt to application/xslt+xml
+- Add *.eml glob for message/rfc822 messages
+- Add application/vnd.openxmlformats-officedocument.presentationml.slideshow
+- Update MathML definition
+- Add application/x-java-keystore and application/x-java-jce-keystore
+- Add OpenDocument test cases, flat XML file definitions
+- Make D sources a sub-class of C sources
+
+* Specification:
+- Update version to 0.19
+
+* Other:
+- Move to git for VCS
+- Use transifex for translations
+
+shared-mime-info 0.70 (2009-09-06)
+* Mime-type Changes:
+- Add MXF video
+- Add Google Earth XML files
+- Add XZ archives
+- Add SPSS formats
+- Add OpenRaster images
+- Add glob for OpenType fonts
+- Add more MPEG-4 video container magic
+- Add RealMediaFormat videos
+- Add LZIP archives
+- Add Kexi mime-types
+- Add CBT comics
+- Add Windows theme packs
+- Add metalink
+- Better glob for core files
+- Better magic for graphviz files
+- Add MRML, CVS, TSV acronyms
+- Better definition for LZO archives
+- Fix mime-type/magic for Java archives
+- Fix MSWinURL magic
+- Add tar.bz2 as a sub-class of application/x-bzip-compressed-tar
+- Split Win32 from Unix autostart detection
+- Better magic for Cisco VPN files
+- New magic for Word documents
+- Better glob matching for Makefiles
+
+* Specification:
+- Add glob-deleteall and magic-deleteall support
+- Add case-sensitive attribute support
+
+* Other changes:
+- fix make call on *BSDs
+- Better error in update-mime-database when a directory doesn't exist
+
+shared-mime-info 0.60 (2009-02-21)
+* Mime-type Changes:
+- Add alias for SMIL
+- Fix SMIL detection
+- Add Annodex mime-type
+- Only use .ogg for audio Ogg files
+- Fix RDF mime-type
+- Oasis mime-type fixes
+- Make PICTURES match a picture CD but not "pictures"
+- Add alias for application/zip
+- Add Microsoft Document Imaging format
+- Add magic for 7z archives
+- Add cb7 comic book archives
+- Add magic for XCF files
+- Remove application/x-msi magic
+- Add audio/x-gsm mime-type
+- Add MS cab mime-type
+- Add FictionBook mime-type
+- Fix PKCS#12 bundles definition (not text files)
+- Add PKCS#7 and PkiPath mime-types
+- Add application/vnd.ms-wpl mime-type
+- Add more aliases for media types
+- Add alias for text/x-csv
+- Fix comment for Gnucash files
+- Make Javascript a sub-class of C
+- Add *.vapi as a glob for Vala files
+- Fix image/fits to match IANA
+- Add Office 2007/OpenXML documents mime-types
+- Add Pocket Word and AportisDoc document types
+- Fix MS ICO, and Photoshop image to match IANA
+
+* Other changes:
+- Regenerate the pot file when needed
+- Some clarifications in the spec
+- Build fix when srcdir != builddir
+
+shared-mime-info 0.51 (2008-07-23)
+* Mime-type Changes:
+- Strings review
+
+shared-mime-info 0.50 (2008-07-22)
+* Mime-type Changes:
+- Better magic for a number of image types, from gdk-pixbuf
+- Add "extended URL format" files
+- Add MSI (Windows Installer) type
+- Add tree content types
+
+* update-mime-database Changes:
+- Implement tree content types, in the treemagic file
+
+shared-mime-info 0.40 (2008-06-11)
+* Mime-type Changes:
+- Add Skencil image
+- Add OpenOffice extension
+- Add Lilypond music sheets
+- Add MO3 compressed tracker files
+- Add text/x-diff alias for patches
+- Add text/x-c alias for C source files
+- Add text/rtf for RTF files
+- Add *.m3u8 glob for M3U files
+- Fix problems with Matroska audio/video detection
+- Fix pack200 magic
+- Fix detection of some message/rfc822 files
+- Tighten PBM/PPM/PGM magic to avoid false positives
+- Make "README*" glob very low
+- Make application/x-gnuplot a subclass of text/plain
+- Remove useless fnmatch matches
+- Remove useless gtkrc mime-type
+
+* update-mime-database Changes:
+- Implement glob weights
+- Implement reverse suffix tree
+- Implement icon and generic-icon support
+- Implement compact suffix tree
+
+shared-mime-info 0.30 (2008-05-12)
+* Mime-type Changes:
+- Add LZMA archive
+- Add Eiffel source
+- Add TTX font
+- Add EXR image
+- Add SubViewer subtitle
+- Add Windows Registry
+- Add SMAF, XMF and iMelogy ringtones
+- Add MRML playlists
+- Add FLTK Fluid
+- Add NFO info
+- Add ALZ archive
+- Add MS Word template
+- Add GNUNet saved searches
+- Add MOF
+- Add CDRDAO TOC
+- Add magic for KDC Kodak
+- Add pattern for PCX images
+- Add pattern for mbox files
+- Add pattern for AWK scripts
+- Add more magic for FLAC audio
+- Add iptables
+- Add Electronic books
+- Add Cisco VPN
+- Add Pack200 archives
+- Add CMake scripts
+- Add MS Works document
+- Update DjVu types
+- Update Flash video type
+- Mark RCS files as text/plain
+- Add an alias for RPM packages
+- Remove application/x-cgi mime-type
+- Remove *.exe glob for Unix executables
+- Remove audio/x-mp3-playlist and make it an alias for MP3 playlists
+- Remove the useless application/x-dbm type
+- Remove duplicate *.amr glob from 3GPP files
+- Add "<Asx" as a pattern for ASX files
+- Lower XML magic priority so text/html is preferred
+- Fix magic for application/x-java
+- Fix up magic for AVI files
+- Add "*.med" glob to MOD music
+- Add "*.3gp2" glob for 3GPP audio/video
+- Fix multiple XML mime-types
+- Remove duplicate StuffIt archive type
+- Remove unused text/x-ksysv-log
+
+* Other:
+- Update specification
+- Add instructions on how to file bugs, and update translations
+- Update dependencies to GLib 2.6
+- Update DTD, require translated comments, require expanded-acronym if
+acronym is present, require a known value for generic-icon
+- Small fix to the update-mime-database man page
+- Ignore unknown fields in update-mime-database
+- Make sure all the comments are marked for translation
+- Fix typos in the DTD
+- Avoid warnings in update-mime-database for the x-content/ mimetypes
+
+shared-mime-info 0.23 (2007-12-18)
+* Mime-type Changes:
+- Add QTIF QuickTime image
+- Add SDP stream description
+- Add Vala source file
+- Add Atom feed, OPML
+- Add SAMI, MicroDVD, MPSub, SSA subtitles
+- Add audio/x-m4b as a sub-class of audio/mp4
+- Add *.aac as a suffix for MPEG-4 audio files
+- Add Compressed Flash detection, add FutureSplash support
+- Add *.asc as a suffix for PGP armoured keys
+- Add application/msword as a sub-class of application/x-ole-storage
+- Don't associate *.htm and *.html to Mozilla bookmarks
+- Add more aliases for PowerPoint and Word mime-types
+- Add *.vlc as a suffix for m3u files
+- Better magic for Word and Office documents
+- Split Windows Media Station playlists from ASX ones
+- Fix up JPEG 2000 mime-types
+* Other:
+- Add a testsuite in the CVS tree
+
+shared-mime-info 0.22 (2007-07-30)
+* Mime-type Changes:
+- Clean up the Netscape/Mozilla bookmarks mime-types
+- Fix Powerpoint magic detection
+- Add another magic matchlet to HTML
+- Add magic detection for OpenOffice.org files
+- Add MP2 audio, EMF mime-types
+- Add more aliases for 3GPP videos
+- Add magic detection to WMF
+- Add more suffixes for WordPerfect documents
+- Add mime-types for SIS/SISX archives
+- Add x-epoc media type
+- Add *.hxx as a suffix for C++ headers
+- Add Erlang mime-type
+- Add another Fortran magic detection
+- Add Plucker mime-type
+- Add winmail.dat files as TNEF files
+- Add WMLScript mime-type
+- Add JAD mime-type
+- Add iRiver PLA playlist mime-type
+- Add Nintendo DS ROM mime-type
+- Add video/avi as an alias for AVI files
+- Update Ogg mime-types to match Xiph's latest documents
+* Other:
+- Improve Window compatibility
+- Update the glib requirements
+
+shared-mime-info 0.21 (2007-04-18)
+* Mime-type Changes:
+- Add *.m2t as a pattern for MPEG-2 files
+- Add comments for the XMCD database and ARC mime-types
+- Fix comments for Adobe FrameMaker documents
+- Make application/m3u an alias for audio/x-mpegurl
+- Make audio/x-mpeg an alias for audio/mpeg
+- Add XPS to the mime-types
+- Fix RealVideo documents mime-types
+- Make application/x-shared-library-la a subclass of text/plain
+- Add TNEF to the mime-types
+- Add PAK archive to the mime-types
+- Add PSF, miniPSF, PSFlib, and gzipped PSF fonts to the mime-types
+- Add *.iso9660 as a pattern for ISO files
+- Add PKCS#10 certification requests to the mime-types
+- Add and correct loads of raw camera image types
+- Add magic for OpenOffice.org file types
+- Add KSysV init files to the mime-types
+- Add DirectDraw surface files to the mime-types
+- Add X11 cursor type to the mime-types
+- Fix magic for RTSPtext metalinks
+
+* Other:
+- Remove mention of ROX in the See Also section of the man page
+
+shared-mime-info 0.20 (2007-02-06)
+* Mime-type Changes:
+- Add text/javascript as an alias for application/javascript
+- Add  *.latex as a pattern for TeX documents
+- Add image/x-macpaint for "MacPaint Bitmap image"
+- Add RTSPtextRTSP-style movie references to application/x-quicktime-media-link
+- Add image/pdf as an alias for application/pdf
+- Add video/flv as an alias for FLV videos
+- Add Google Video Pointer mime-types
+- Add application/pls as an alias for pls files
+- Add gzip/bz2 types for DVI, PDF and PostScript
+- Add *.kar as a pattern for MIDI files
+- Add video/mp4v-es as an alias for MPEG-4 videos
+- Add video/x-ms-wvx, video/x-ms-wax and video/x-ms-wmx as alias for ASX
+- Add patterns and aliases for Vivo video
+- Add alias for FLI files
+- Add video/x-ms-wm as an alias for video/x-ms-asf
+- Add a image/x-icns mime-type for MacOS X icons
+- Add a text/x-rpm-spec mime-type for RPM .spec files
+- Add NSC multicast playlists to video/x-ms-asf, with magic
+- Add the audio/x-tta mime-type
+- Add application/x-msexcel as an alias for Excel files
+- Add PGM, PBM and PPM as sub-classes of PNM
+- Move *.ram files to application/ram
+- Use the preferred Matroska mime-types, includes Matroska audio
+- Detect Makefile with a shebang at the start
+- Add application/x-bzip2 as an alias for bz2 archives
+- Add more magic for QuickTime files
+- Add eMusic download packages
+- Add *.rdfs and *.owl patterns to RDF files
+- Add newer magic for Gnumeric files
+- Add mime-type for WBMP images
+- Make DIA a sub-class of application/xml
+- Clean up PGP/GnuPG file types
+- Add Lua scripts
+- Avoid misdetecting Java files as C files
+- Add OCL scripts
+- Merge the application/vnd.palm and application/x-palm-database mime-types
+- Make mbox as a sub-class of text/plain
+- Add magic to detect AutoCAD DXF files
+- Add magic for Go SGF records
+- Add magic for PGN chess games
+- Add DAR archives
+- Add WavPack audio
+- Remove bogus magic for Targa files
+- Add Markaby scripts
+- Add ACE archives
+- Add Haansoft's Hangul word processor documents
+- Clean up XSLT mime-types depending on version
+- Add LDIF files
+- Add XLIFF translation files
+- Move compressed SVG files to image/svg+xml-compressed
+- Add Citrix ICA files
+- Add XUL and XBL detection
+- Move compressed pcf (font) detection to application/x-font-pcf
+
+* Other:
+- Fix CPIO description
+- Don't abort when update-mime-database can't open a file
+- Move the pkgconfig file to $(datadir)
+- Skip the translation of update-mime-database.c
+- Have a quiet output to update-mime-database by default
+
+shared-mime-info 0.19 (2006-08-25)
+* Mime-type Changes:
+- Add application/powerpoint and application/mspowerpoint as aliases for
+  Powerpoint
+- Add VHDL mime-type
+- Add application/mbox for the MBOX mailboxes
+- Add text/x-txt2tags
+- Remove *.dat as a glob for MPEG videos
+- Add Monkey's Audio, AC3, and Musepack mime-types
+- Fix matching Type1 fonts
+- Remove useless application/octet-stream mime-type
+- Add *.mo to application/x-gettext-translation
+- Add loads of tracker audio files, console ROMs, raw images mime-types
+- Fix QuickTime Media Links mime-types and detection
+- Add audio/AMR and audio/AMR-WB mime-types and detection
+- Add better TeX magic, and more globs
+- Add better magic for patch files
+- Fix .jar files' mime-types, and add better magic
+- Fix magic for MPEG4 audio files
+- Add an alias for .deb packages
+- Add application/sieve mime-type
+- Fix application/javascript's mime-type
+- Fix text/csv's mime-type
+
+* Other:
+- Add paths to the .pc file
+
+shared-mime-info 0.18 (2006-07-03)
+
+* Mime-type Changes:
+- Add *.qtl to video/quicktime
+- Add *.wax to audio/x-ms-asx
+- Add *.mpga to audio/mpeg
+- Add audio/x-ms-wma (Windows Media Audio)
+- Add application/xspf+xml (XSPF playlist)
+- Add a lot of subclassing information
+- Fix the RSS mime-types
+- Fix *.asx files' mime-type
+- Avoid audio/x-ms-asx files being detected as HTML
+- Avoid application/pdf files being detected as Matlab documents
+- Clarify C, C++, C# and ObjC mime-types
+
+* New translations:
+- Danish
+
+shared-mime-info 0.17 (2006-03-14)
+
+* Mime-types Changes:
+- Added application/x-cue (CD image cuesheet)
+- Added application/vnd.ms-access (Access database)
+- Added application/x-7z-compressed (7-zip archive)
+- Added application/mathematica (Mathematica)
+- Added application/x-gedcom (GEDCOM genealogy)
+- Added application/x-shorten (Shorten audio)
+- Added video/3gpp (3GPP video)
+- Added application/docbook+xml (Docbook)
+- Added application/x-sqlite (SQLite database)
+- Added application/x-go-sgf (Go saved games)
+- Added application/x-m4 (M4 scripts)
+- Added a few Ogg related mime-types
+- Added application/x-cbr and application/x-cbz (Comic books archives)
+- Added flv-application/octet-stream (Flash video)
+- Added application/x-gnuplot (Gnuplot)
+- Added application/x-srt (Text subtitle files)
+
+* New translations:
+- zh_TW
+
+* Spec changes:
+- Make the mime cache contain an mmappable binary format
+- Add acronym and expanded-acronym
+- Add recommendations for duplicate globs handling
+
+shared-mime-info 0.16  (2004-03-22)
+
+* Mime Types Changes:
+- Added application/mathematica
+- Added application/stuffit
+- Fixed application/vnd.lotus-1-2-3 and other office types
+- Added application/vnd.oasis.opendocument
+- Even more types now inherit from text/plain
+- Added text/x-gettext-translation
+- Fixed up text/x-python
+
+* Lots of new translations:
+   - bg eo es eu it ja ms nb pl pt pt_BR ru sq uk zh_CN
+
+shared-mime-info 0.15  (2004-08-30)
+
+* Mime Types Changes:
+- Added various aliases
+- Make text files inherit from text/plain
+- Added text/x-xmi
+- Added application/x-javascripta
+
+* Translations:
+- new translations: Danish (Ole Laursen), Greek (Nikos Charonitakis), 
+  Korean (Cha Young-Ho)
+- updated translations: Finnish  (Ville Skyttä), German (Christian Neumair)
+
+			Version 0.14 (21-Mar-2004)
+
+* upped the mozilla/netscape bookmarks priority.
+
+* change xbell to x-xbel
+
+* Add matroska video mime type
+
+* application/x-archive needs lower prio than application/x-deb
+
+* Change C# mimetype to text/x-csharp
+
+* Add application/x-ole-storage mimetype, remove OLE storage match from
+  application/msword, since it matches all sorts of document types using
+  OLE.
+
+* add types from ImageMagick
+
+* add .flac detection.
+
+* make MIME descriptions more consistent with each other (patch from
+  Christian Neumair).
+
+* add a package-config file
+
+* conditionally disable running update-mimedb for packages.
+
+* fix up RIFF and shell magic, as well as merging diff files and patch files.
+
+* New az, cy, and no translations.
+
+			Version 0.13.1 (01-Jan-2003)
+
+* Specify number of characters to test when checking for text files
+  (requested by Jaap Karssenberg).
+
+* Added <alias> and <sub-class-of> fields.
+
+
+
+			Version 0.12 (28-Aug-2003)
+
+* Added *.pm and *.al globs for PERL (Jaap Karssenberg).
+
+* Added a section to the spec about the inode/* MIME types (suggested by
+  Jaap Karssenberg).
+
+* Clarify the meaning of nested magic matches.
+
+* Fixed example (lang -> xml:lang) (Christophe Fergeau).
+
+* Change 'case insensitive match' to 'lowercase match'.
+
+* Fixed byte-swapping for little-endian and host-endian matches (reported by
+  Jaap Karssenberg).
+
+* Ignore trailing '/' characters on MIME directory name.
+
+	
+			Version 0.11 (17-Apr-2003)
+
+* 'make install' validates the common types file against the DTD.
+
+* Install instructions updated for new XDG Base Directory Specification.
+
+* Added new <root-XML> element to identify XML files by
+  (namespaceURI, localName) pairs (suggested by Mike Hearn).
+
+* Minor updates to the database itself (Vincent Lefevre).
+
+* Added short discussion of ACAP Media Type Dataset Class to spec (suggested
+  by Dave Cridland).
+
+* Updated spec to use XDG Base Directory Specification for paths.
+
+* Clarifications to glob matching section (requested by Jonathan Blandford).
+
+* Added a 'Recommended checking order' section to help interoperability
+  (suggested by Lars Hallberg).
+
+* Greatly improved error reporting in update-mime-database, and commented
+  the code more.
+
+* Fixed possible segfault if a MIME type was defined twice with no xml:lang
+  in the same directory.
+
+* When update-mime-database is run, warn the user if the MIME directory
+  given isn't in the search path.
+
+
+			Version 0.10 (03-Mar-2003)
+
+* Much better validation of input files.
+
+* Added note about the use of extended attributes to store the MIME type.
+
+* Ensure that all changes to generated files happen atomically.
+
+* Change to half-text, half-binary format to make parsing the magic file
+  much easier.
+
+* Make it really clear that user prefs don't go in the database.
+
+* Require libxml 2.4.0 (not sure if it's needed, but older versions seem a
+  little buggy).
+
+* Fix problem where copying nodes lost the namespace (workaround for libxml
+  bug).
+
+* Added DTD to freedesktop.org.xml.
+
+* Spec was confused about whether a match type was an attribute or element
+  name. Settled on attribute and updated XML (makes the DTD easier this way).
+
+* Glob pattern for TGIF files.
+
+* Added application/x-cd-image (requested by Stefano Peluchetti).
+
+* Added text/x-uri (text/uri-list is used for something else).
+
+* Added more extensions for powerpoint (Stefano Peluchetti).
+
+* Marked AIFF as Amiga/Mac (Marcin Juszkiewicz), not just Amiga.
+
+* Added *.xsl glob (*.xslt was already allowed) and added xhtml MIME type
+  (requested by Vincent Lefevre).
+
+
+			Version 0.9 (29-Jul-2002)
+
+* Removed bashism in uninstall rule (reported by Filip Van Raemdonck).
+
+* Added manpage (Filip Van Raemdonck).
+
+* Require libxml 2.4.0 (not sure if it's needed, but play it safe).
+
+* Workaround libxml problem where copying nodes lost the namespace
+  (reported by Stephen Watson and Jesse Wagner)
+
+* Added skeleton description for 'action' element.
+
+* Re-worded spec section on user preferences (Filip Van Raemdonck).
+
+* Added extra authors to spec.
+
+* Changed SHOULD to MUST for requiring shared package (suggested by
+  Filip Van Raemdonck).
+
+* Added some error checking to make sure output is writeable.
