@@ -8,7 +8,11 @@ mimemagic
 Powerful and versatile MIME sniffing package using pre-compiled glob patterns, magic number signatures, xml document
 namespaces, and tree magic for mounted volumes, generated from the XDG shared-mime-info database.
 
-Note: this embeds the XML from the release of https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/6a226038bf42dae45a049a6b8e729abc/shared-mime-info-1.10.tar.xz which is licensed under the GPL-2.0-or-later license.
+Note: this embeds the XML from the release of https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/6a226038bf42dae45a049a6b8e729abc/shared-mime-info-1.10.tar.xz which is licensed under the GPL license. Based on upstream notices and license files, this is not clear if any version of the GPL applies or if this version 2.0 only or version 2.0 or later. This is under discussion at:
+- https://github.com/zRedShift/mimemagic/issues/4 
+- https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/154
+- https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/154#note_850132
+
 The XML data is also used to create efficient Go code that can identify mime types which may make the generated Go code subject to the GPL too.
 
 ## Features
