@@ -13,7 +13,7 @@ Note: this embeds the XML from the release of https://gitlab.freedesktop.org/xdg
 - https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/154
 - https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/154#note_850132
 
-The XML data is also used to create efficient Go code that can identify mime types which may make the generated Go code subject to the GPL too.
+**NOTE** The shared-mime-info XML data is also used to create efficient Go code that can identify mime types which may make the generated Go code subject to the GPL including potentially any Go code that would futher import code from this project.
 
 ## Features
 
