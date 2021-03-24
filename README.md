@@ -11,8 +11,8 @@ namespaces, and tree magic for mounted volumes, generated from the XDG shared-mi
 ## License
 
 The generated code in `magicsigs.go`, `globs.go`, `treemagicsigs.go`, `namespaces.go` 
-and `mediatypes.go` makes this a derivative work of `shared-mime-info`, and therefore falls under the `GPL-2.0`
-license. See the [discussion](https://github.com/zRedShift/mimemagic/issues/4).
+and `mediatypes.go` makes this a derivative work of `shared-mime-info`, and therefore falls under the
+`GPL-2.0-or-later` license. See the [discussion](https://github.com/zRedShift/mimemagic/issues/4).
 
 For an MIT licensed branch with the generated code  removed, please see 
 [this](https://github.com/zRedShift/mimemagic/tree/MIT). Providing a hypothetical permissively licensed
