@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/zRedShift/mimemagic"
 	"os"
 	"path/filepath"
+
+	"github.com/zRedShift/mimemagic/v2"
 )
 
 var (
