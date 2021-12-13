@@ -37,11 +37,11 @@ and KDE's 'kmimetypefinder' in performance
 
 The library:
 ```bash
-go get github.com/zRedShift/mimemagic
+go get github.com/zRedShift/mimemagic/v2
 ```
 The CLI:
 ```bash
-go get github.com/zRedShift/mimemagic/cmd/mimemagic
+go get github.com/zRedShift/mimemagic/v2/cmd/mimemagic
 ```
 
 ## API
@@ -57,7 +57,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/zRedShift/mimemagic"
+	"github.com/zRedShift/mimemagic/v2"
 	"strings"
 )
 
